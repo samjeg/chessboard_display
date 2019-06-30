@@ -1,0 +1,95 @@
+
+.imageframe {
+	height: 3vw;
+	width: 3vw;
+	border-radius: 50%;
+	margin-left: 2vw;
+}
+
+.chessboard {
+	margin-top: 15vh;
+	margin-left: 17.5vw;
+	height: 50vw;
+	width: 50vw;
+	border: 5px solid black;
+}
+
+table {
+	height: 50vw;
+	width: 50vw;
+	border: 0px;
+	background-color: #cc6600;
+	padding: 0;
+}
+
+table tr td {
+	height: 6.06vw;
+	width: 6.06vw;
+  	border: 0px;
+  	padding: 0;
+  	overflow: hidden;
+}
+
+table tr td .chesspiece-container {
+	height: 6.06vw;
+	width: 6.06vw;
+	/*background-color: purple;*/
+	overflow: hidden;
+}
+
+table tr td .chesspiece-container .chesspiece {
+	height: 5vw;
+	width: 5vw;
+	text-align: center;
+	font-size: 4.7vw;
+	/*background-color: blue;*/
+	margin-left: 0.4vw;
+	margin-top: 0.2vw;
+}
+
+
+
+table tr {
+}
+
+
+.black {
+	background-color: #000;
+}
+
+.light-brown {
+	background-color: #cc6600;
+}
+
+.brown {
+	background-color: #993333;
+}
+
+.comment-input {
+	width: 100%;
+	height: 10vh;
+}
+
+.purple {
+	background-color: purple;
+}
+
+
+@media only screen and (max-width: 600px) {
+	.imageframe {
+		height: 8vw;
+		width: 8vw;
+		border-radius: 50%;
+	}	
+
+	.chessboard {
+		margin-top: 5vh;
+		margin-left: 7.5vw;
+		height: 70vw;
+		width: 70vw;
+		border: 5px solid black;
+	}
+
+	
+
+}

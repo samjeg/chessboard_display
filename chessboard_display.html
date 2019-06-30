@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>Chess Display</title>
+  <link href="css/chessboard.css" rel="stylesheet" />           
+</head>
+<body>
+	<div class="chessboard">
+		<table id='table' onclick="robot();">
+		    <tr id='topRow'>
+				<td class="light-brown">
+					<div id='8A' class='empty chesspiece-container' onclick='(Human).moveTo("8A")'>
+						<div id='brook1' class='chesspiece'>♞</div>
+					</div>
+				</td>
+				<td class='brown'>
+					<div id='8B' class='empty' onclick='(Human).moveTo("8B")'>
+					</div>
+				</td>
+				<td class="light-brown">
+					<div id='8C' class='empty' onclick='(Human).moveTo("8C")'>
+					</div>
+				</td>
+				<td class='brown'>
+					<div id='8D' class='empty' onclick='(Human).moveTo("8D")'>
+					</div>
+				</td>
+				<td class="light-brown">
+					<div id='8E' class='empty' onclick='(Human).moveTo("8E")'>
+					</div>
+				</td>
+				<td class='brown'>
+					<div id='8F' class='empty' onclick='(Human).moveTo("8F")'>
+					</div>
+				</td>
+				<td class="light-brown">
+					<div id='8G' class='empty' onclick='(Human).moveTo("8G")'>
+					</div>
+				</td>
+				<td class='brown'>
+					<div id='8H' class='empty' onclick='(Human).moveTo("8H")'>
+					</div>
+				</td>
+            </tr>
+			<tr id='secondRow'>
+				<td class='brown'>
+					<div id='7A' class='empty' onclick='(Human).moveTo("7A")'>
+					</div>
+				</td>
+				<td class="light-brown">
+					<div id='7B' class='empty' onclick='(Human).moveTo("7B")'>
+					</div>
+				</td>
+				<td class='brown'>
+					<div id='7C' class='empty' onclick='(Human).moveTo("7C")'>
+					</div>
+				</td>
+				<td class="light-brown">
+					<div id='7D' class='empty' onclick='(Human).moveTo("7D")'>
+					</div>
+				</td>
+				<td class='brown'>
+					<div id='7E' class='empty' onclick='(Human).moveTo("7E")'>
+					</div>
+				</td>
+				<td class="light-brown">
+					<div id='7F' class='empty' onclick='(Human).moveTo("7F")'>
+					</div>
+				</td>
+				<td class='brown'>
+					<div id='7G' class='empty' onclick='(Human).moveTo("7G")'>
+					</div>
+				</td>
+				<td class="light-brown">
+					<div id='7H' class='empty' onclick='(Human).moveTo("7H")'>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="light-brown">
+					<div id='6A' class='empty' onclick='(Human).moveTo("6A")'></div>
+				</td>
+				<td class='brown'>
+					<div id='6B' class='empty' onclick='(Human).moveTo("6B")'></div>
+				</td>
+				<td class="light-brown">
+					<div id='6C' class='empty' onclick='(Human).moveTo("6C")'></div>
+				</td>
+				<td class='brown'>
+					<div id='6D' class='empty' onclick='(Human).moveTo("6D")'></div>
+				</td>
+				<td class="light-brown">
+					<div id='6E' class='empty' onclick='(Human).moveTo("6E")'></div>
+				</td>
+				<td class='brown'>
+					<div id='6F' class='empty' onclick='(Human).moveTo("6F")'></div>
+				</td>
+				<td class="light-brown">
+					<div id='6G' class='empty' onclick='(Human).moveTo("6G")'></div>
+				</td>
+				<td class='brown'>
+					<div id='6H' class='empty' onclick='(Human).moveTo("6H")'></div>
+				</td>
+			</tr>
+			<tr>
+				<td class='brown'>
+					<div id='5A' class='empty' onclick='(Human).moveTo("5A")'></div>
+				</td>
+				<td class="light-brown">
+					<div id='5B' class='empty' onclick='(Human).moveTo("5B")'></div>
+				</td>
+				<td class='brown'>
+					<div id='5C' class='empty' onclick='(Human).moveTo("5C")'></div>
+				</td>
+				<td class="light-brown">
+					<div id='5D' class='empty' onclick='(Human).moveTo("5D")'></div>
+				</td>
+				<td class='brown'>
+					<div id='5E' class='empty' onclick='(Human).moveTo("5E")'></div>
+				</td>
+				<td class="light-brown">
+					<div id='5F' class='empty' onclick='(Human).moveTo("5F")'></div>
+				</td>
+				<td class='brown'>
+					<div id='5G' class='empty' onclick='(Human).moveTo("5G")'></div>
+				</td>
+				<td class="light-brown">
+					<div id='5H' class='empty' onclick='(Human).moveTo("5H")'></div>
+				</td>
+			</tr>
+			<tr>
+				<td class="light-brown">
+					<div id='4A' class='empty' onclick='(Human).moveTo("4A")'></div>
+				</td>
+				<td class='brown'>
+					<div id='4B' class='empty' onclick='(Human).moveTo("4B")'></div>
+				</td>
+				<td class="light-brown">
+					<div id='4C' class='empty' onclick='(Human).moveTo("4C")'></div>
+				</td>
+				<td class='brown'>
+					<div id='4D' class='empty' onclick='(Human).moveTo("4D")'></div>
+				</td>
+				<td class="light-brown">
+					<div id='4E' class='empty' onclick='(Human).moveTo("4E")'></div>
+				</td>
+				<td class='brown'>
+					<div id='4F' class='empty' onclick='(Human).moveTo("4F")'></div>
+				</td>
+				<td class="light-brown">
+					<div id='4G' class='empty' onclick='(Human).moveTo("4G")'></div>
+				</td>
+				<td class='brown'>
+					<div id='4H' class='empty' onclick='(Human).moveTo("4H")'></div>
+				</td>
+			</tr>
+			<tr>
+				<td class='brown'>
+					<div id='3A' class='empty' onclick='(Human).moveTo("3A")'></div>
+				</td>
+				<td class="light-brown">
+					<div id='3B' class='empty' onclick='(Human).moveTo("3B")'></div>
+				</td>
+				<td class='brown'>
+					<div id='3C' class='empty' onclick='(Human).moveTo("3C")'></div>
+				</td>
+				<td class="light-brown">
+					<div id='3D' class='empty' onclick='(Human).moveTo("3D")'></div>
+				</td>
+				<td class='brown'>
+					<div id='3E' class='empty' onclick='(Human).moveTo("3E")'></div>
+				</td>
+				<td class="light-brown">
+					<div id='3F' class='empty' onclick='(Human).moveTo("3F")'></div>
+				</td>
+				<td class='brown'>
+					<div id='3G' class='empty' onclick='(Human).moveTo("3G")'></div>
+				</td>
+				<td class="light-brown">
+					<div id='3H' class='empty' onclick='(Human).moveTo("3H")'></div>
+				</td>
+			</tr>
+			<!--Second Last Row-->
+			<tr id='secondLastRow'>
+				<td class="light-brown">
+					<div id='2A' class='empty' onclick='(Human).moveTo("2A")'>
+					</div>
+				</td>
+				<td class='brown'>
+					<div id='2B' class='empty' onclick='(Human).moveTo("2B")'>
+					</div>
+				</td>
+				<td class="light-brown">
+					<div id='2C' class='empty' onclick='(Human).moveTo("2C")'>
+					</div>
+				</td>
+				<td class='brown'>
+					<div id='2D' class='empty' onclick='(Human).moveTo("2D")'>
+					</div>
+				</td>
+				<td class="light-brown">
+					<div id='2E' class='empty' onclick='(Human).moveTo("2E")'>
+					</div>
+				</td>
+				<td class='brown'>
+					<div id='2F' class='empty' onclick='(Human).moveTo("2F")'>
+					</div>
+				</td>
+				<td class="light-brown">
+					<div id='2G' class='empty' onclick='(Human).moveTo("2G")'>
+					</div>
+				</td>
+				<td class='brown'>
+					<div id='2H' class='empty' onclick='(Human).moveTo("2H")'>
+					</div>
+				</td>
+			</tr>
+			<!--Last Row-->
+			<tr id='lastRow'>
+				<td class='brown'>
+					<div id='1A' class='empty' onclick='(Human).moveTo("1A")'>
+					</div>
+				</td>
+				<td class="light-brown">
+					<div id='1B' class='empty' onclick='(Human).moveTo("1B")'>
+					</div>
+				</td>
+				<td class='brown'>
+					<div id='1C' class='empty' onclick='(Human).moveTo("1C")'>
+					</div>
+				</td>
+				<td class="light-brown">
+					<div id='1D' class='empty' onclick='(Human).moveTo("1D")'>
+					</div>
+				</td>
+				<td class='brown'>
+					<div id='1E' class='empty' onclick='(Human).moveTo("1E")'>
+					</div>
+				</td>
+				<td class="light-brown">
+					<div id='1F' class='empty' onclick='(Human).moveTo("1F")'>
+					</div>
+				</td>
+				<td class='brown'>
+					<div id='1G' class='empty' onclick='(Human).moveTo("1G")'>
+					</div>
+				</td>
+				<td class="light-brown">
+					<div id='1H' class='empty' onclick='(Human).moveTo("1H")'>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<script type="text/javascript" src="js/dev_jquery.js"></script>
+    <script type="text/javascript" src="js/RobotMovement.js"></script>
+</body>
+</html>
