@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	console.log("Hello jquery");
+	// console.log("Hello jquery");
 	
 });
 

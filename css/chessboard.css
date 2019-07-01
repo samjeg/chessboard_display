@@ -10,8 +10,10 @@
 	margin-top: 15vh;
 	margin-left: 17.5vw;
 	height: 50vw;
-	width: 50vw;
+	width: 50.7vw;
 	border: 5px solid black;
+	overflow: hidden;
+	position: absolute;
 }
 
 table {
@@ -42,9 +44,19 @@ table tr td .chesspiece-container .chesspiece {
 	width: 5vw;
 	text-align: center;
 	font-size: 4.7vw;
-	/*background-color: blue;*/
 	margin-left: 0.6vw;
-	margin-top: 0.2vw;
+	margin-top: 0.6vw;
+	line-height: 5.3vw;
+	border-radius: 50%;
+
+}
+
+.player {
+	background-color: #C0C0C0;
+}
+
+.comp-player {
+	background-color: #404040;
 }
 
 
@@ -72,6 +84,13 @@ table tr {
 
 .purple {
 	background-color: purple;
+}
+
+#switch-button {
+	height: 10vh;
+	width: 10vw;
+	margin-top: 20vh;
+	position: absolute;
 }
 
 

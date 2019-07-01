@@ -11,250 +11,285 @@
 </head>
 <body>
 	<div class="chessboard">
-		<table id='table' onclick="robot();">
+		<table id='table'>
 		    <tr id='topRow'>
 				<td class="light-brown">
-					<div id='8A' class='empty chesspiece-container' onclick='(Human).moveTo("8A")'>
+					<div id='8A' class='empty chesspiece-container' onclick='moveTo("8A");'>
+						<div id="comp_rook1" class="chesspiece comp-player" onclick='remove("comp_rook1");'>♜</div>
 					</div>
 				</td>
 				<td class='brown'>
-					<div id='8B' class='empty chesspiece-container' onclick='(Human).moveTo("8B")'>
+					<div id='8B' class='empty chesspiece-container' onclick='moveTo("8B");'>
+						<div id="comp_horse1" class="chesspiece comp-player" onclick='remove("comp_horse1");'>♞</div>
 					</div>
 				</td>
 				<td class="light-brown">
-					<div id='8C' class='empty chesspiece-container' onclick='(Human).moveTo("8C")'>
+					<div id='8C' class='empty chesspiece-container' onclick='moveTo("8C");'>
+						<div id="comp_bishop1" class="chesspiece comp-player" onclick='remove("comp_bishop1");'>♝</div>
 					</div>
 				</td>
 				<td class='brown'>
-					<div id='8D' class='empty chesspiece-container' onclick='(Human).moveTo("8D")'>
+					<div id='8D' class='empty chesspiece-container' onclick='moveTo("8D");'>
+						<div id="comp_queen" class="chesspiece comp-player" onclick='remove("comp_queen");'>♛</div>
 					</div>
 				</td>
 				<td class="light-brown">
-					<div id='8E' class='empty chesspiece-container' onclick='(Human).moveTo("8E")'>
+					<div id='8E' class='empty chesspiece-container' onclick='moveTo("8E");'>
+						<div id="comp_king" class="chesspiece comp-player" onclick='remove("comp_king");'>♚</div>
 					</div>
 				</td>
 				<td class='brown'>
-					<div id='8F' class='empty chesspiece-container' onclick='(Human).moveTo("8F")'>
+					<div id='8F' class='empty chesspiece-container' onclick='moveTo("8F");'>
+						<div id="comp_bishop2" class="chesspiece comp-player" onclick='remove("comp_bishop2");'>♝</div>
 					</div>
 				</td>
 				<td class="light-brown">
-					<div id='8G' class='empty chesspiece-container' onclick='(Human).moveTo("8G")'>
+					<div id='8G' class='empty chesspiece-container' onclick='moveTo("8G");'>
+						<div id="comp_horse2" class="chesspiece comp-player" onclick='remove("comp_horse2");'>♞</div>
 					</div>
 				</td>
 				<td class='brown'>
-					<div id='8H' class='empty chesspiece-container' onclick='(Human).moveTo("8H")'>
+					<div id='8H' class='empty chesspiece-container' onclick='moveTo("8H");'>
+						<div id="comp_rook2" class="chesspiece comp-player" onclick='remove("comp_rook2");'>♜</div>
 					</div>
 				</td>
             </tr>
 			<tr id='secondRow'>
 				<td class='brown'>
-					<div id='7A' class='empty chesspiece-container' onclick='(Human).moveTo("7A")'>
+					<div id='7A' class='empty chesspiece-container' onclick='moveTo("7A");'>
+						<div id="comp_pawn1" class="chesspiece comp-player" onclick='remove("comp_pawn1");'>♟</div>
 					</div>
 				</td>
 				<td class="light-brown">
-					<div id='7B' class='empty chesspiece-container' onclick='(Human).moveTo("7B")'>
+					<div id='7B' class='empty chesspiece-container' onclick='moveTo("7B");'>
+						<div id="comp_pawn2" class="chesspiece comp-player" onclick='remove("comp_pawn2");'>♟</div>
 					</div>
 				</td>
 				<td class='brown'>
-					<div id='7C' class='empty chesspiece-container' onclick='(Human).moveTo("7C")'>
+					<div id='7C' class='empty chesspiece-container' onclick='moveTo("7C");'>
+						<div id="comp_pawn3" class="chesspiece comp-player" onclick='remove("comp_pawn3");'>♟</div>
 					</div>
 				</td>
 				<td class="light-brown">
-					<div id='7D' class='empty chesspiece-container' onclick='(Human).moveTo("7D")'>
+					<div id='7D' class='empty chesspiece-container' onclick='moveTo("7D");'>
+						<div id="comp_pawn4" class="chesspiece comp-player" onclick='remove("comp_pawn4");'>♟</div>
 					</div>
 				</td>
 				<td class='brown'>
-					<div id='7E' class='empty chesspiece-container' onclick='(Human).moveTo("7E")'>
+					<div id='7E' class='empty chesspiece-container' onclick='moveTo("7E");'>
+						<div id="comp_pawn5" class="chesspiece comp-player" onclick='remove("comp_pawn5");'>♟</div>
 					</div>
 				</td>
 				<td class="light-brown">
-					<div id='7F' class='empty chesspiece-container' onclick='(Human).moveTo("7F")'>
+					<div id='7F' class='empty chesspiece-container' onclick='moveTo("7F");'>
+						<div id="comp_pawn6" class="chesspiece comp-player" onclick='remove("comp_pawn6");'>♟</div>
 					</div>
 				</td>
 				<td class='brown'>
-					<div id='7G' class='empty chesspiece-container' onclick='(Human).moveTo("7G")'>
+					<div id='7G' class='empty chesspiece-container' onclick='moveTo("7G");'>
+						<div id="comp_pawn7" class="chesspiece comp-player" onclick='remove("comp_pawn7");'>♟</div>
 					</div>
 				</td>
 				<td class="light-brown">
-					<div id='7H' class='empty chesspiece-container' onclick='(Human).moveTo("7H")'>
+					<div id='7H' class='empty chesspiece-container' onclick='moveTo("7H");'>
+						<div id="comp_pawn8" class="chesspiece comp-player" onclick='remove("comp_pawn8");'>♟</div>
 					</div>
 				</td>
 			</tr>
 			<tr>
 				<td class="light-brown">
-					<div id='6A' class='empty chesspiece-container' onclick='(Human).moveTo("6A")'></div>
+					<div id='6A' class='empty chesspiece-container' onclick='moveTo("6A");'></div>
 				</td>
 				<td class='brown'>
-					<div id='6B' class='empty chesspiece-container' onclick='(Human).moveTo("6B")'></div>
+					<div id='6B' class='empty chesspiece-container' onclick='moveTo("6B");'></div>
 				</td>
 				<td class="light-brown">
-					<div id='6C' class='empty chesspiece-container' onclick='(Human).moveTo("6C")'></div>
+					<div id='6C' class='empty chesspiece-container' onclick='moveTo("6C");'></div>
 				</td>
 				<td class='brown'>
-					<div id='6D' class='empty chesspiece-container' onclick='(Human).moveTo("6D")'></div>
+					<div id='6D' class='empty chesspiece-container' onclick='moveTo("6D");'></div>
 				</td>
 				<td class="light-brown">
-					<div id='6E' class='empty chesspiece-container' onclick='(Human).moveTo("6E")'></div>
+					<div id='6E' class='empty chesspiece-container' onclick='moveTo("6E");'></div>
 				</td>
 				<td class='brown'>
-					<div id='6F' class='empty chesspiece-container' onclick='(Human).moveTo("6F")'></div>
+					<div id='6F' class='empty chesspiece-container' onclick='moveTo("6F");'></div>
 				</td>
 				<td class="light-brown">
-					<div id='6G' class='empty chesspiece-container' onclick='(Human).moveTo("6G")'></div>
+					<div id='6G' class='empty chesspiece-container' onclick='moveTo("6G");'></div>
 				</td>
 				<td class='brown'>
-					<div id='6H' class='empty chesspiece-container' onclick='(Human).moveTo("6H")'></div>
+					<div id='6H' class='empty chesspiece-container' onclick='moveTo("6H");'></div>
 				</td>
 			</tr>
 			<tr>
 				<td class='brown'>
-					<div id='5A' class='empty chesspiece-container' onclick='(Human).moveTo("5A")'></div>
+					<div id='5A' class='empty chesspiece-container' onclick='moveTo("5A");'></div>
 				</td>
 				<td class="light-brown">
-					<div id='5B' class='empty chesspiece-container' onclick='(Human).moveTo("5B")'></div>
+					<div id='5B' class='empty chesspiece-container' onclick='moveTo("5B");'></div>
 				</td>
 				<td class='brown'>
-					<div id='5C' class='empty chesspiece-container' onclick='(Human).moveTo("5C")'></div>
+					<div id='5C' class='empty chesspiece-container' onclick='moveTo("5C");'></div>
 				</td>
 				<td class="light-brown">
-					<div id='5D' class='empty chesspiece-container' onclick='(Human).moveTo("5D")'></div>
+					<div id='5D' class='empty chesspiece-container' onclick='moveTo("5D");'></div>
 				</td>
 				<td class='brown'>
-					<div id='5E' class='empty chesspiece-container' onclick='(Human).moveTo("5E")'></div>
+					<div id='5E' class='empty chesspiece-container' onclick='moveTo("5E");'></div>
 				</td>
 				<td class="light-brown">
-					<div id='5F' class='empty chesspiece-container' onclick='(Human).moveTo("5F")'></div>
+					<div id='5F' class='empty chesspiece-container' onclick='moveTo("5F");'></div>
 				</td>
 				<td class='brown'>
-					<div id='5G' class='empty chesspiece-container' onclick='(Human).moveTo("5G")'></div>
+					<div id='5G' class='empty chesspiece-container' onclick='moveTo("5G");'></div>
 				</td>
 				<td class="light-brown">
-					<div id='5H' class='empty chesspiece-container' onclick='(Human).moveTo("5H")'></div>
+					<div id='5H' class='empty chesspiece-container' onclick='moveTo("5H");'></div>
 				</td>
 			</tr>
 			<tr>
 				<td class="light-brown">
-					<div id='4A' class='empty chesspiece-container' onclick='(Human).moveTo("4A")'></div>
+					<div id='4A' class='empty chesspiece-container' onclick='moveTo("4A");'></div>
 				</td>
 				<td class='brown'>
-					<div id='4B' class='empty chesspiece-container' onclick='(Human).moveTo("4B")'></div>
+					<div id='4B' class='empty chesspiece-container' onclick='moveTo("4B");'></div>
 				</td>
 				<td class="light-brown">
-					<div id='4C' class='empty chesspiece-container' onclick='(Human).moveTo("4C")'></div>
+					<div id='4C' class='empty chesspiece-container' onclick='moveTo("4C");'></div>
 				</td>
 				<td class='brown'>
-					<div id='4D' class='empty chesspiece-container' onclick='(Human).moveTo("4D")'></div>
+					<div id='4D' class='empty chesspiece-container' onclick='moveTo("4D");'></div>
 				</td>
 				<td class="light-brown">
-					<div id='4E' class='empty chesspiece-container' onclick='(Human).moveTo("4E")'></div>
+					<div id='4E' class='empty chesspiece-container' onclick='moveTo("4E");'></div>
 				</td>
 				<td class='brown'>
-					<div id='4F' class='empty chesspiece-container' onclick='(Human).moveTo("4F")'></div>
+					<div id='4F' class='empty chesspiece-container' onclick='moveTo("4F");'></div>
 				</td>
 				<td class="light-brown">
-					<div id='4G' class='empty chesspiece-container' onclick='(Human).moveTo("4G")'></div>
+					<div id='4G' class='empty chesspiece-container' onclick='moveTo("4G");'></div>
 				</td>
 				<td class='brown'>
-					<div id='4H' class='empty chesspiece-container' onclick='(Human).moveTo("4H")'></div>
+					<div id='4H' class='empty chesspiece-container' onclick='moveTo("4H");'></div>
 				</td>
 			</tr>
 			<tr>
 				<td class='brown'>
-					<div id='3A' class='empty chesspiece-container' onclick='(Human).moveTo("3A")'></div>
+					<div id='3A' class='empty chesspiece-container' onclick='moveTo("3A");'></div>
 				</td>
 				<td class="light-brown">
-					<div id='3B' class='empty chesspiece-container' onclick='(Human).moveTo("3B")'></div>
+					<div id='3B' class='empty chesspiece-container' onclick='moveTo("3B");'></div>
 				</td>
 				<td class='brown'>
-					<div id='3C' class='empty chesspiece-container' onclick='(Human).moveTo("3C")'></div>
+					<div id='3C' class='empty chesspiece-container' onclick='moveTo("3C");'></div>
 				</td>
 				<td class="light-brown">
-					<div id='3D' class='empty chesspiece-container' onclick='(Human).moveTo("3D")'></div>
+					<div id='3D' class='empty chesspiece-container' onclick='moveTo("3D");'></div>
 				</td>
 				<td class='brown'>
-					<div id='3E' class='empty chesspiece-container' onclick='(Human).moveTo("3E")'></div>
+					<div id='3E' class='empty chesspiece-container' onclick='moveTo("3E");'></div>
 				</td>
 				<td class="light-brown">
-					<div id='3F' class='empty chesspiece-container' onclick='(Human).moveTo("3F")'></div>
+					<div id='3F' class='empty chesspiece-container' onclick='moveTo("3F");'></div>
 				</td>
 				<td class='brown'>
-					<div id='3G' class='empty chesspiece-container' onclick='(Human).moveTo("3G")'></div>
+					<div id='3G' class='empty chesspiece-container' onclick='moveTo("3G");'></div>
 				</td>
 				<td class="light-brown">
-					<div id='3H' class='empty chesspiece-container' onclick='(Human).moveTo("3H")'></div>
+					<div id='3H' class='empty chesspiece-container' onclick='moveTo("3H");'></div>
 				</td>
 			</tr>
 			<!--Second Last Row-->
 			<tr id='secondLastRow'>
 				<td class="light-brown">
-					<div id='2A' class='empty chesspiece-container' onclick='(Human).moveTo("2A")'>
+					<div id='2A' class='empty chesspiece-container' onclick='moveTo("2A");'>
+						<div id="player_pawn1" class="chesspiece player" onclick='select("player_pawn1");'>♟</div>
 					</div>
 				</td>
 				<td class='brown'>
-					<div id='2B' class='empty chesspiece-container' onclick='(Human).moveTo("2B")'>
+					<div id='2B' class='empty chesspiece-container' onclick='moveTo("2B");'>
+						<div id="player_pawn2" class="chesspiece player" onclick='select("player_pawn2");'>♟</div>
 					</div>
 				</td>
 				<td class="light-brown">
-					<div id='2C' class='empty chesspiece-container' onclick='(Human).moveTo("2C")'>
+					<div id='2C' class='empty chesspiece-container' onclick='moveTo("2C");'>
+						<div id="player_pawn3" class="chesspiece player" onclick='select("player_pawn3");'>♟</div>
 					</div>
 				</td>
 				<td class='brown'>
-					<div id='2D' class='empty chesspiece-container' onclick='(Human).moveTo("2D")'>
+					<div id='2D' class='empty chesspiece-container' onclick='moveTo("2D");'>
+						<div id="player_pawn4" class="chesspiece player" onclick='select("player_pawn4");'>♟</div>
 					</div>
 				</td>
 				<td class="light-brown">
-					<div id='2E' class='empty chesspiece-container' onclick='(Human).moveTo("2E")'>
+					<div id='2E' class='empty chesspiece-container' onclick='moveTo("2E");'>
+						<div id="player_pawn5" class="chesspiece player" onclick='select("player_pawn5");'>♟</div>
 					</div>
 				</td>
 				<td class='brown'>
-					<div id='2F' class='empty chesspiece-container' onclick='(Human).moveTo("2F")'>
+					<div id='2F' class='empty chesspiece-container' onclick='moveTo("2F");'>
+						<div id="player_pawn6" class="chesspiece player" onclick='select("player_pawn6");'>♟</div>
 					</div>
 				</td>
 				<td class="light-brown">
-					<div id='2G' class='empty chesspiece-container' onclick='(Human).moveTo("2G")'>
+					<div id='2G' class='empty chesspiece-container' onclick='moveTo("2G");'>
+						<div id="player_pawn7" class="chesspiece player" onclick='select("player_pawn7");'>♟</div>
 					</div>
 				</td>
 				<td class='brown'>
-					<div id='2H' class='empty chesspiece-container' onclick='(Human).moveTo("2H")'>
+					<div id='2H' class='empty chesspiece-container' onclick='moveTo("2H");'>
+						<div id="player_pawn8" class="chesspiece player" onclick='select("player_pawn8");'>♟</div>
 					</div>
 				</td>
 			</tr>
 			<!--Last Row-->
 			<tr id='lastRow'>
 				<td class='brown'>
-					<div id='1A' class='empty chesspiece-container' onclick='(Human).moveTo("1A")'>
+					<div id='1A' class='empty chesspiece-container' onclick='moveTo("1A");'>
+						<div id="player_rook1" class="chesspiece player" onclick='select("player_rook1");'>♜</div>
 					</div>
 				</td>
 				<td class="light-brown">
-					<div id='1B' class='empty chesspiece-container' onclick='(Human).moveTo("1B")'>
+					<div id='1B' class='empty chesspiece-container' onclick='moveTo("1B");'>
+						<div id="player_horse1" class="chesspiece player" onclick='select("player_horse1");'>♞</div>
 					</div>
 				</td>
 				<td class='brown'>
-					<div id='1C' class='empty chesspiece-container' onclick='(Human).moveTo("1C")'>
+					<div id='1C' class='empty chesspiece-container' onclick='moveTo("1C");'>
+						<div id="player_bishop1" class="chesspiece player" onclick='select("player_horse1");'>♝</div>
 					</div>
 				</td>
 				<td class="light-brown">
-					<div id='1D' class='empty chesspiece-container' onclick='(Human).moveTo("1D")'>
+					<div id='1D' class='empty chesspiece-container' onclick='moveTo("1D");'>
+						<div id="player_queen" class="chesspiece player" onclick='select("player_queen");'>♛</div>
 					</div>
 				</td>
 				<td class='brown'>
-					<div id='1E' class='empty chesspiece-container' onclick='(Human).moveTo("1E")'>
+					<div id='1E' class='empty chesspiece-container' onclick='moveTo("1E");'>
+						<div id="player_king" class="chesspiece player" onclick='select("player_king");'>♚</div>
 					</div>
 				</td>
 				<td class="light-brown">
-					<div id='1F' class='empty chesspiece-container' onclick='(Human).moveTo("1F")'>
+					<div id='1F' class='empty chesspiece-container' onclick='moveTo("1F");'>
+						<div id="player_bishop2" class="chesspiece player" onclick='select("player_bishop2");'>♝</div>
 					</div>
 				</td>
 				<td class='brown'>
-					<div id='1G' class='empty chesspiece-container' onclick='(Human).moveTo("1G")'>
+					<div id='1G' class='empty chesspiece-container' onclick='moveTo("1G");'>
+						<div id="player_horse2" class="chesspiece player" onclick='select("player_horse2");'>♞</div>
 					</div>
 				</td>
 				<td class="light-brown">
-					<div id='1H' class='empty chesspiece-container' onclick='(Human).moveTo("1H")'>
+					<div id='1H' class='empty chesspiece-container' onclick='moveTo("1H");'>
+						<div id="player_rook2" class="chesspiece player" onclick='select("player_rook2");'>♜</div>
 					</div>
 				</td>
 			</tr>
 		</table>
+	</div>
+	<div id="switch-button" class="btn btn-primary purple" onclick="switchColours();">
+		Switch Colours
 	</div>
 	<script type="text/javascript" src="js/dev_jquery.js"></script>
     <script type="text/javascript" src="js/RobotMovement.js"></script>
