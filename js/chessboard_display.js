@@ -1,5 +1,7 @@
-current_colour = "White"
-current_selected_piece = undefined;
+var current_colour = "White"
+var current_selected_piece = undefined;
+var current_selected_coordinates = undefined;
+var live_chessboard_matrix = undefined;
 
 $(document).ready(function(){
 	var chess_piece_ids = [ 
@@ -21,10 +23,10 @@ $(document).ready(function(){
 	];
 
 	var chess_place_ids = get_chess_place_ids(chess_piece_ids);
-	var live_chessboard_matrix = live_chessboard_matrix_gen(chess_place_ids, chess_piece_ids);
+	live_chessboard_matrix = live_chessboard_matrix_gen(chess_place_ids, chess_piece_ids);
 	var matrixIsSame = matrixSame(live_chessboard_matrix, new_chessboard_matrix);
 	var diffPiece = findDiffentPiece(live_chessboard_matrix, new_chessboard_matrix);
-	var diffPieceCoor = findPieceCoordinates(new_chessboard_matrix, diffPiece);
+	var diffPieceCoor = findBoardCoordinates(new_chessboard_matrix, diffPiece);
 	var diffPiecePlaceId = id_gen(diffPieceCoor[0], diffPieceCoor[1]); 
 	// console.log("Matrix the same: "+
 	// 			matrixIsSame+
@@ -46,12 +48,64 @@ $(document).ready(function(){
 
 	// switchColours(players, comp_players, "White");
 	// console.log("Current Id: "+current_selected_piece.id);
+	// console.log("Is Type: "+isType("black_pawn1", "pawn"));
 	
 });
 
+function getMovablePlaces(){
+	var x = current_selected_coordinates[1];
+	var y = current_selected_coordinates[0];
+	var matrix = live_chessboard_matrix;
+	var placeIds = [];
+	if(isType(current_selected_piece.id, "pawn")){
+		if(x>=0&&x<=7&&y>=0&&y<=7){
+			var fwd1 = id_gen(y+1, x);
+			var fwd2 = id_gen(y+2, x);
+			var leftfwd1 = id_gen(y+1, x+1);
+			var rightfwd1 = id_gen(y+1, x-1);
+			placeIds = [id_gen(y-1, x), id_gen(y-2, x), id_gen(y-1, x-1), id_gen(y-1, x+1)]; 
+		}
+	}
+	return placeIds;
+}
+
+function findPieceCoordinates(selected){
+	// console.log("Selected: "+selected);
+	if(selected!=undefined){
+		parent_id = selected.parentElement.id;
+		fstAttr = first_coordinate_gen(parseInt(parent_id.charAt(0)));
+		secAttr = second_coordinate_gen(parent_id.charAt(1));
+		coordinates = [fstAttr, secAttr];
+		return coordinates
+	}
+}
+
+function isType(pieceId, target_piece){
+	var new_target_piece = target_piece;
+	var count = 0;
+	var found = false;
+	var keep_looking = true;
+	
+	for(var j=0; j<pieceId.length; j++){
+		if(pieceId.charAt(j)==new_target_piece.charAt(0)){
+			// console.log("Target so far: "+new_target_piece.charAt(0));
+			new_target_piece = new_target_piece.substr(1);
+			// console.log("Target so far after: "+new_target_piece.charAt(0));
+		}
+		if(new_target_piece==""){
+			return true;
+		}
+	}
+	return false;
+		
+
+}
 
 function select(pieceId){
 	current_selected_piece = document.getElementById(pieceId);
+	current_selected_coordinates = findPieceCoordinates(current_selected_piece);
+	// console.log("Coordinates: "+coordinates);
+	console.log("Places: "+getMovablePlaces())
 }
 
 function moveTo(placeId){
@@ -173,7 +227,7 @@ function findDiffentPiece(live_matrix, new_matrix){
 	return "";
 }
 
-function findPieceCoordinates(new_matrix, value){
+function findBoardCoordinates(new_matrix, value){
 	for(var i=0; i<new_matrix.length; i++){
 		for(var j=0; j<new_matrix[i].length; j++){
 			if(new_matrix[i][j]==value){
