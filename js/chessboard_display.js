@@ -165,6 +165,19 @@ function rookExtraMoves(rookArray){
 	return rookArray;
 }
 
+function carefullKing(kingArray){
+	var newArray = []; 
+
+	for(var i=0; i<kingArray.length; i++){
+		var next = kingArray[i];
+		if(!placeHasCheck(next)){
+			newArray.push(next);
+		} 
+	}
+
+	return newArray;
+}
+
 function getMovable(pieceId, x, y){
 	var movablePlaces = [];
 	if(isType(pieceId, "pawn")){
@@ -183,7 +196,7 @@ function getMovable(pieceId, x, y){
 		movablePlaces = shrinkContinuosArray(getHorseMovablePlaces(x, y));
 	}
 	else if(isType(pieceId, "king")){
-		movablePlaces = kingExtraMoves(getKingMovablePlaces(x, y));
+		movablePlaces = carefullKing(kingExtraMoves(getKingMovablePlaces(x, y)));
 	}
 
 	return movablePlaces;
@@ -204,17 +217,6 @@ function canCastleRight(){
 }
 
 function canCastleLeft(){
-	// console.log("castle left: "+
-	// 	!kingHasMoved()+
-	// 	" "+
-	// 	!kingHasCheck()+
-	// 	" "+
-	// 	!leftRookHasMoved()+
-	// 	" "+
-	// 	!toLeftRookHasCheck()+
-	// 	" "+
-	// 	!toLeftRookHasPieces()
-	// );
 	if(
 		!kingHasMoved()&&
 		!kingHasCheck()&&
