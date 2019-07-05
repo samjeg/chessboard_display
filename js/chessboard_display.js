@@ -93,13 +93,26 @@ function select(pieceId){
 }
 
 function moveTo(placeId){
+	var selectedId = "";
 	if(current_selected_piece!=undefined){
 		if(current_selected_movable_ids.length!=0){
 			for(var i=0; i<current_selected_movable_ids.length; i++){
 				if(placeId==current_selected_movable_ids[i]){
 					var current_place = document.getElementById(placeId);
 					current_place.appendChild(current_selected_piece);
-					movedPieces.push(current_selected_piece.id);
+					selectedId = current_selected_piece.id;
+					movedPieces.push(selectedId);
+					console.log("move to: "+selectedId+" "+placeId);
+					if(selectedId=="player_king"&&placeId=="1G"){
+						kingMovedRight = true;
+					}
+					if(selectedId=="player_king"&&placeId=="1C"){
+						kingMovedLeft = true;
+					}
+					if(isType(selectedId, "player_rook")){
+						kingMovedRight = false;
+						kingMovedLeft = false;
+					}
 				}
 			}
 
@@ -128,9 +141,11 @@ function kingExtraMoves(kingArray){
 	
 	if(canCastleRight()){
 		kingArray.push("1G")
+		console.log("can castle right");
 	}
-	else if(canCastleLeft()){
+	if(canCastleLeft()){
 		kingArray.push("1C");
+		console.log("can castle left");
 	}
 
 	return kingArray;
@@ -140,11 +155,11 @@ function rookExtraMoves(rookArray){
 	
 	if(kingMovedRight){
 		rookArray.push("1F")
-		kingMovedRight = false;
+		console.log("king moved right");
 	}
-	else if(kingMovedLeft){
+	if(kingMovedLeft){
 		rookArray.push("1D");
-		kingMovedLeft = false;
+		console.log("king moved left");
 	}
 
 	return rookArray;
@@ -180,7 +195,7 @@ function canCastleRight(){
 		!kingHasCheck()&&
 		!rightRookHasMoved()&&
 		!toRightRookHasCheck()&&
-		!toRightRookHasPieces()&&
+		!toRightRookHasPieces()
 	){
 		return true;
 	}
@@ -189,12 +204,23 @@ function canCastleRight(){
 }
 
 function canCastleLeft(){
+	// console.log("castle left: "+
+	// 	!kingHasMoved()+
+	// 	" "+
+	// 	!kingHasCheck()+
+	// 	" "+
+	// 	!leftRookHasMoved()+
+	// 	" "+
+	// 	!toLeftRookHasCheck()+
+	// 	" "+
+	// 	!toLeftRookHasPieces()
+	// );
 	if(
 		!kingHasMoved()&&
 		!kingHasCheck()&&
 		!leftRookHasMoved()&&
 		!toLeftRookHasCheck()&&
-		!toLeftRookHasPieces()&&
+		!toLeftRookHasPieces()
 	){
 		return true;
 	}
