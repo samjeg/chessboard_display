@@ -15,7 +15,7 @@
 		    <tr id='topRow'>
 				<td class="light-brown">
 					<div id='8A' class='empty chesspiece-container' onclick='moveTo("8A");'>
-						<div id="comp_rook1" class="chesspiece comp-player" onclick='remove("comp_rook1");'>♜</div>
+						
 					</div>
 				</td>
 				<td class='brown'>
@@ -40,7 +40,7 @@
 				</td>
 				<td class='brown'>
 					<div id='8F' class='empty chesspiece-container' onclick='moveTo("8F");'>
-						<div id="comp_bishop2" class="chesspiece comp-player" onclick='remove("comp_bishop2");'>♝</div>	
+						
 					</div>
 				</td>
 				<td class="light-brown">
@@ -126,7 +126,9 @@
 			</tr>
 			<tr>
 				<td class='brown'>
-					<div id='5A' class='empty chesspiece-container' onclick='moveTo("5A");'></div>
+					<div id='5A' class='empty chesspiece-container' onclick='moveTo("5A");'>
+						<div id="player_pawn3" class="chesspiece player" onclick='select("player_pawn3");'>♟</div>
+					</div>
 				</td>
 				<td class="light-brown">
 					<div id='5B' class='empty chesspiece-container' onclick='moveTo("5B");'></div>
@@ -136,12 +138,12 @@
 				</td>
 				<td class="light-brown">
 					<div id='5D' class='empty chesspiece-container' onclick='moveTo("5D");'>
-						
+						<div id="player_pawn6" class="chesspiece player" onclick='select("player_pawn6");'>♟</div>
 					</div>
 				</td>
 				<td class='brown'>
 					<div id='5E' class='empty chesspiece-container' onclick='moveTo("5E");'>
-						
+						<div id="player_queen" class="chesspiece player" onclick='select("player_queen");'>♛</div>
 					</div>
 				</td>
 				<td class="light-brown">
@@ -159,7 +161,7 @@
 			<tr>
 				<td class="light-brown">
 					<div id='4A' class='empty chesspiece-container' onclick='moveTo("4A");'>
-						
+						<div id="comp_bishop2" class="chesspiece comp-player" onclick='remove("comp_bishop2");'>♝</div>	
 					</div>
 				</td>
 				<td class='brown'>
@@ -182,7 +184,7 @@
 				</td>
 				<td class='brown'>
 					<div id='4F' class='empty chesspiece-container' onclick='moveTo("4F");'>
-						
+						<div id="comp_rook1" class="chesspiece comp-player" onclick='remove("comp_rook1");'>♜</div>
 					</div>
 				</td>
 				<td class="light-brown">
@@ -210,11 +212,13 @@
 				</td>
 				<td class="light-brown">
 					<div id='3D' class='empty chesspiece-container' onclick='moveTo("3D");'>
-						
+						<div id="player_horse1" class="chesspiece player" onclick='select("player_horse1");'>♞</div>
 					</div>
 				</td>
 				<td class='brown'>
-					<div id='3E' class='empty chesspiece-container' onclick='moveTo("3E");'></div>
+					<div id='3E' class='empty chesspiece-container' onclick='moveTo("3E");'>
+						<div id="player_bishop1" class="chesspiece player" onclick='select("player_bishop1");'>♝</div>
+					</div>
 				</td>
 				<td class="light-brown">
 					<div id='3F' class='empty chesspiece-container' onclick='moveTo("3F");'>
@@ -223,12 +227,12 @@
 				</td>
 				<td class='brown'>
 					<div id='3G' class='empty chesspiece-container' onclick='moveTo("3G");'>
-						
+						<div id="player_bishop2" class="chesspiece player" onclick='select("player_bishop2");'>♝</div>
 					</div>
 				</td>
 				<td class="light-brown">
 					<div id='3H' class='empty chesspiece-container' onclick='moveTo("3H");'>
-						
+						<div id="player_horse2" class="chesspiece player" onclick='select("player_horse2");'>♞</div>
 					</div>
 				</td>
 			</tr>
@@ -246,7 +250,7 @@
 				</td>
 				<td class="light-brown">
 					<div id='2C' class='empty chesspiece-container' onclick='moveTo("2C");'>
-						<div id="player_pawn3" class="chesspiece player" onclick='select("player_pawn3");'>♟</div>
+						
 					</div>
 				</td>
 				<td class='brown'>
@@ -261,7 +265,7 @@
 				</td>
 				<td class='brown'>
 					<div id='2F' class='empty chesspiece-container' onclick='moveTo("2F");'>
-						<div id="player_pawn6" class="chesspiece player" onclick='select("player_pawn6");'>♟</div>
+						
 					</div>
 				</td>
 				<td class="light-brown">
@@ -284,17 +288,17 @@
 				</td>
 				<td class="light-brown">
 					<div id='1B' class='empty chesspiece-container' onclick='moveTo("1B");'>
-						<div id="player_horse1" class="chesspiece player" onclick='select("player_horse1");'>♞</div>
+						
 					</div>
 				</td>
 				<td class='brown'>
 					<div id='1C' class='empty chesspiece-container' onclick='moveTo("1C");'>
-						<div id="player_bishop1" class="chesspiece player" onclick='select("player_bishop1");'>♝</div>
+						
 					</div>
 				</td>
 				<td class="light-brown">
 					<div id='1D' class='empty chesspiece-container' onclick='moveTo("1D");'>
-						<div id="player_queen" class="chesspiece player" onclick='select("player_queen");'>♛</div>
+						
 					</div>
 				</td>
 				<td class='brown'>
@@ -304,12 +308,12 @@
 				</td>
 				<td class="light-brown">
 					<div id='1F' class='empty chesspiece-container' onclick='moveTo("1F");'>
-						<div id="player_bishop2" class="chesspiece player" onclick='select("player_bishop2");'>♝</div>
+						
 					</div>
 				</td>
 				<td class='brown'>
 					<div id='1G' class='empty chesspiece-container' onclick='moveTo("1G");'>
-						<div id="player_horse2" class="chesspiece player" onclick='select("player_horse2");'>♞</div>
+						
 					</div>
 				</td>
 				<td class="light-brown">

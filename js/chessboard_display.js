@@ -75,6 +75,7 @@ function select(pieceId){
 	// console.log("Movable "+current_selected_movable_ids);
 	current_king_place_id = document.getElementById("player_king").parentElement.id;
 	console.log("King id: "+current_king_place_id);
+	// console.log("KingHasCheck: "+kingHasCheck());
 	// console.log("Attacking Places: "+getAttackingPlaces());
 	// console.log("king has check: "+kingHasCheck());
 	// console.log("toRightRookHasCheck: "+toRightRookHasCheck());
@@ -82,10 +83,10 @@ function select(pieceId){
 	// console.log("toLeftRookHasCheck: "+toLeftRookHasCheck());
 	// console.log("leftRookHasCheck: "+leftRookHasCheck());
 	// console.log("rightRookHasMoved: "+rightRookHasMoved());
-	console.log("leftRookHasMoved: "+leftRookHasMoved());
+	// console.log("leftRookHasMoved: "+leftRookHasMoved());
 	// console.log("kingHasMoved: "+kingHasMoved());
-	// console.log("toRightHasPiecesInBetween: "+toRightRookHasPieces());
-	// console.log("toRightHasPiecesInBetween: "+toLeftRookHasPieces());
+	console.log("toRightHasPiecesInBetween: "+toRightRookHasPieces());
+	console.log("toRightHasPiecesInBetween: "+toLeftRookHasPieces());
 
 }
 
@@ -173,7 +174,7 @@ function toLeftRookHasPieces(){
 function leftRookHasMoved(){
 	for(var i=0; i<movedPieces.length; i++){
 		next = movedPieces[i];
-		console.log("moved: "+movedPieces[i]+" "+isType(next, "player_rook1"));
+		// console.log("moved: "+movedPieces[i]+" "+isType(next, "player_rook1"));
 		if(isType(next, "player_rook1")){
 			return true;
 		}
