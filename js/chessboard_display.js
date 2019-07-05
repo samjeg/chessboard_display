@@ -3,8 +3,10 @@ var current_selected_piece = undefined;
 var current_selected_coordinates = [];
 var live_chessboard_matrix = undefined;
 var current_selected_movable_ids = [];
-var current_king_piece = undefined;
-var current_king_coordinates = [];
+var king_piece = undefined;
+var king_coordinates = [];
+var kingInCheck = false;
+var movedPieces = [];
 
 $(document).ready(function(){
 	var chess_piece_ids = [ 
@@ -20,9 +22,9 @@ $(document).ready(function(){
 		[ "", "", "", "", "", "", "", ""],
 		[ "", "", "", "", "", "", "", ""],
 		[ "", "", "", "", "", "", "", ""],
-		[ "", "", "", "", "", "", "", ""],
+		[ "player_horse1", "", "", "", "", "", "", ""],
 		[ "player_pawn1", "player_pawn2", "player_pawn3", "player_pawn4", "player_pawn5", "player_pawn6", "player_pawn7", "player_pawn8" ],
-		["player_rook1", "player_horse1", "player_bishop1", "player_queen", "player_king", "player_bishop2", "player_horse2", "player_rook2"]
+		["player_rook1", "", "player_bishop1", "player_queen", "player_king", "player_bishop2", "player_horse2", "player_rook2"]
 	];
 
 	// var chess_place_ids = get_chess_place_ids(chess_piece_ids);
@@ -43,7 +45,7 @@ $(document).ready(function(){
 
 	// var diffElement = document.getElementById(diffPiece);
 	// var diffPlaceElement = document.getElementById(diffPiecePlaceId)
-	// console.log("diff El: "+diffElement+" "+diffPlaceElement);
+	// console.log("diff El: "+diffElement.id+" "+diffPlaceElement.id);
 
 
 	var players = document.getElementsByClassName("player");
@@ -63,11 +65,28 @@ function select(pieceId){
 	current_selected_piece = document.getElementById(pieceId);
 	current_selected_coordinates = findPieceCoordinates(current_selected_piece);
 	// current_selected_movable_ids = shrinkPawnArray(getPawnMovablePlaces(), "checking");
-	current_selected_movable_ids = getQueenMovablePlaces();
-	current_king_place_id = document.getElementById("player_king").parentElement.id;
+	current_selected_movable_ids = shrinkContinuosArray(getQueenMovablePlaces(
+														current_selected_coordinates[1],
+														current_selected_coordinates[0] 
+									)
+	);
+	// console.log("selected: "+current_selected_piece.id);
+	// console.log("Coordinates: "+current_selected_coordinates);
 	// console.log("Movable "+current_selected_movable_ids);
-	console.log("King id: "+current_king_place_id)
-	console.log("Attacking Places: "+getAttackingPlaces());
+	current_king_place_id = document.getElementById("player_king").parentElement.id;
+	console.log("King id: "+current_king_place_id);
+	// console.log("Attacking Places: "+getAttackingPlaces());
+	// console.log("king has check: "+kingHasCheck());
+	// console.log("toRightRookHasCheck: "+toRightRookHasCheck());
+	// console.log("rightRookHasCheck: "+rightRookHasCheck());
+	// console.log("toLeftRookHasCheck: "+toLeftRookHasCheck());
+	// console.log("leftRookHasCheck: "+leftRookHasCheck());
+	// console.log("rightRookHasMoved: "+rightRookHasMoved());
+	console.log("leftRookHasMoved: "+leftRookHasMoved());
+	// console.log("kingHasMoved: "+kingHasMoved());
+	// console.log("toRightHasPiecesInBetween: "+toRightRookHasPieces());
+	// console.log("toRightHasPiecesInBetween: "+toLeftRookHasPieces());
+
 }
 
 function moveTo(placeId){
@@ -77,6 +96,7 @@ function moveTo(placeId){
 				if(placeId==current_selected_movable_ids[i]){
 					var current_place = document.getElementById(placeId);
 					current_place.appendChild(current_selected_piece);
+					movedPieces.push(current_selected_piece.id);
 				}
 			}
 
@@ -101,13 +121,158 @@ function remove(pieceId){
 	}
 }
 
+
+
+function toRightRookHasPieces(){
+	var toRightRookPlaces = ["1F", "1G"];
+	
+	var first = document.getElementById(toRightRookPlaces[0]);
+	if(first!=null){
+		if(first.firstElementChild!=null){
+			return true;
+		}
+	}
+
+	var second = document.getElementById(toRightRookPlaces[1]);
+	if(second!=null){
+		if(second.firstElementChild!=null){
+			return true;
+		}
+	}
+
+	return false;
+}
+
+function toLeftRookHasPieces(){
+	var toLeftRookPlaces = ["1D", "1C", "1B"];
+
+	var first = document.getElementById(toLeftRookPlaces[0]);
+	if(first!=null){
+		if(first.firstElementChild!=null){
+			return true;
+		}
+	}
+
+	var second = document.getElementById(toLeftRookPlaces[1]);
+	if(second!=null){
+		if(second.firstElementChild!=null){
+			return true;
+		}
+	}
+
+	var third = document.getElementById(toLeftRookPlaces[2]);
+	if(third!=null){
+		if(third.firstElementChild!=null){
+			return true;
+		}
+	}
+
+	return false;
+}
+
+function leftRookHasMoved(){
+	for(var i=0; i<movedPieces.length; i++){
+		next = movedPieces[i];
+		console.log("moved: "+movedPieces[i]+" "+isType(next, "player_rook1"));
+		if(isType(next, "player_rook1")){
+			return true;
+		}
+	}
+	return false;
+}
+
+function rightRookHasMoved(){
+	for(var i=0; i<movedPieces.length; i++){
+		next = movedPieces[i];
+		if(isType(next, "player_rook2")){
+			return true;
+		}
+	}
+	return false;
+}
+
+function kingHasMoved(){
+	for(var i=0; i<movedPieces.length; i++){
+		next = movedPieces[i];
+		if(isType(next, "player_king")){
+			return true;
+		}
+	}
+	return false;
+}
+
+function kingHasCheck(){
+	var attackingPlaces = getAttackingPlaces();
+	if(attackingPlaces.length>0){
+		return true;
+	}
+	return false;
+}
+
+function placeHasCheck(placeId){
+	var attackingPlaces = getAttackingPlacesFromPos(placeId);
+	if(attackingPlaces.length>0){
+		return true;
+	}
+	return false;
+}
+
+function toRightRookHasCheck(){
+	var toRightRookPlaces = ["1F", "1G"];
+
+	if(placeHasCheck(toRightRookPlaces[0])){
+		return true;
+	}
+
+	if(placeHasCheck(toRightRookPlaces[1])){
+		return true;
+	}
+
+	return false;
+}
+
+function toLeftRookHasCheck(){
+	var toLeftRookPlaces = ["1D", "1C", "1B"];
+
+	if(placeHasCheck(toLeftRookPlaces[0])){
+		console.log("1D: "+toLeftRookPlaces[0]);
+		return true;
+	}
+
+	if(placeHasCheck(toLeftRookPlaces[1])){
+		console.log("1C: "+toLeftRookPlaces[1]);
+		return true;
+	}
+
+	if(placeHasCheck(toLeftRookPlaces[2])){
+		console.log("1B: "+toLeftRookPlaces[2]);
+		return true;
+	}
+
+	return false;
+}
+
+function leftRookHasCheck(){
+	if(placeHasCheck("1A")){
+		return true;
+	}
+	return false;
+}
+
+function rightRookHasCheck(){
+	if(placeHasCheck("1H")){
+		return true;
+	}
+	return false;
+}
+
+
 function getAttackingPlaces(){
-	var current_king_piece = document.getElementById("player_king");
-	var current_king_coordinates = findPieceCoordinates(current_king_piece);
-	var x = current_king_coordinates[1];
-	var y = current_king_coordinates[0]
-	var attackingPawnPlaces = shrinkPawnArray(getPawnMovablePlaces(x, y), "checking");
-	// console.log("Pawn pieces: "+attackingPawnPlaces);
+	var king_piece = document.getElementById("player_king");
+	var king_coordinates = findPieceCoordinates(king_piece);
+	var x = king_coordinates[1];
+	var y = king_coordinates[0]
+	var attackingPawnPlaces = getAttackingPawnPlaces(x, y);
 	var attackingHorsePlaces = getAttackingHorsePlaces(x, y);
 	var attackingRookPlaces = getAttackingRookPlaces(true, x, y);
 	var attackingBishopPlaces = getAttackingBishopPlaces(true, x, y);
@@ -120,6 +285,67 @@ function getAttackingPlaces(){
 											 .concat(attackingQueenPlaces);
 
 	return attackingPlaces;
+}
+
+function getAttackingPlacesFromPos(placeId){
+
+	var attackingPlaces = [];
+	var placeCoordinates = findPlaceCoordinates(placeId);
+	var x = placeCoordinates[1];
+	var y = placeCoordinates[0]
+	var attackingPawnPlaces = getAttackingPawnPlaces(x, y);
+	var attackingHorsePlaces = getAttackingHorsePlaces(x, y);
+	var attackingRookPlaces = getAttackingRookPlaces(true, x, y);
+	var attackingBishopPlaces = getAttackingBishopPlaces(true, x, y);
+	var queen1 = getAttackingRookPlaces(false, x, y);
+	var queen2 = getAttackingBishopPlaces(false, x, y);
+	var attackingQueenPlaces = queen1.concat(queen2);
+	attackingPlaces = attackingPawnPlaces.concat(attackingHorsePlaces)
+											 .concat(attackingRookPlaces)
+											 .concat(attackingBishopPlaces)
+											 .concat(attackingQueenPlaces);
+	// if(placeId=="1B"){
+	// 	console.log("attacking rook: r "+
+	// 		attackingRookPlaces+
+	// 		" b "+
+	// 		attackingBishopPlaces+
+	// 		" q "+
+	// 		attackingQueenPlaces+
+	// 		" h "+
+	// 		attackingHorsePlaces+
+	// 		" p "+
+	// 		attackingPawnPlaces+
+	// 		" a "+
+	// 		attackingPlaces
+	// 	);
+	// }
+
+	return attackingPlaces;
+}
+
+function getAttackingPawnPlaces(x, y){
+	var attackingPawnPlaces = shrinkPawnArray(getPawnMovablePlaces(x, y), "checking");
+	var new_array = [];
+
+	var first = document.getElementById(attackingPawnPlaces[0]);
+	if(first!=null){
+		if(first.firstElementChild!=null){
+			if(placeHasCheck(attackingPawnPlaces[0])){
+				new_array.push(attackingPawnPlaces[0]);
+			}		
+		}
+	}
+
+	var second = document.getElementById(attackingPawnPlaces[1]);
+	if(second!=null){
+		if(second.firstElementChild!=null){
+			if(placeHasCheck(attackingPawnPlaces[1])){
+				new_array.push(attackingPawnPlaces[0]);
+			}		
+		}
+	}
+
+	return new_array;
 }
 
 function getAttackingPiecesPlaces(placeId, array, type1, type2){
@@ -216,31 +442,14 @@ function moveArrayToBack(array){
 function shrinkContinuosArray(array){
 	new_array = [];
 
-	for(var i=0; i<8; i++){
+	for(var i=0; i<array.length; i++){
 		var next = array[i];
-		if(next!=""){
-			new_array.push(next);
-		}
-	}
+		if(next!=undefined){
+			if(next!=""){
+				// console.log("Nexts: "+next);
+				new_array.push(next);
 
-	for(var j=8; j<16; j++){
-		var next = array[j];
-		if(next!=""){
-			new_array.push(next);
-		}
-	}
-
-	for(var k=16; k<24; k++){
-		var next = array[k];
-		if(next!=""){
-			new_array.push(next);
-		}
-	}
-
-	for(var n=24; n<32; n++){
-		var next = array[n];
-		if(next!=""){
-			new_array.push(next);
+			}
 		}
 	}
 
@@ -249,14 +458,14 @@ function shrinkContinuosArray(array){
 
 function getAttackingHorsePlaces(x, y){
 	var horseMovablePlaces = getHorseMovablePlaces(x, y);
-	console.log("Horse Movable: "+horseMovablePlaces);
+	// console.log("Horse Movable: "+horseMovablePlaces);
 	var attackingHorsePlaces = [];
 	for(var i=0; i<horseMovablePlaces.length; i++){
 		next = document.getElementById(horseMovablePlaces[i]);
 		if(next!=null){
 			if(next.childElementCount!=0){
 				if(next.firstElementChild!=null){
-					if(isType(next.firstElementChild.id, "comp_")){
+					if(isType(next.firstElementChild.id, "comp_horse")){
 						attackingHorsePlaces.push(next.id);
 					}
 				}
@@ -312,7 +521,7 @@ function getPawnMovablePlaces(x, y){
 function shrinkPawnArray(array, mechanic_needed){
 	new_array = [];
 
-	console.log("pawn "+array[1]);
+	// console.log("pawn "+array[1]);
 	
 	if(mechanic_needed=="playing"){
 		if(array[0]!=""){
@@ -587,6 +796,7 @@ function getQueenMovablePlaces(x, y){
 	var rookPlaces = getRookMovablePlaces(x, y);
 	var bishopPlaces = getBishopMovablePlaces(x, y);
 	place_ids = rookPlaces.concat(bishopPlaces);
+
 	return place_ids;
 }
 
@@ -651,6 +861,13 @@ function findPieceCoordinates(selected){
 	}
 }
 
+function findPlaceCoordinates(parent_id){
+	fstAttr = first_coordinate_gen(parseInt(parent_id.charAt(0)));
+	secAttr = second_coordinate_gen(parent_id.charAt(1));
+	coordinates = [fstAttr, secAttr];
+	return coordinates;
+}
+
 function isType(pieceId, target_piece){
 	var new_target_piece = target_piece;
 	var count = 0;
@@ -703,7 +920,11 @@ function get_chess_place_ids(piece_ids){
 	place_ids = [];
 
 	for(var i=0; i<piece_ids.length; i++){
-		place_ids[i] = document.getElementById(piece_ids[i]).parentElement.id;
+
+		if(document.getElementById(piece_ids[i])!=null){
+			place_ids[i] = document.getElementById(piece_ids[i]).parentElement.id;
+			// console.log("null id: "+piece_ids[i])
+		}
 	}              
 
 	return place_ids;
@@ -766,7 +987,8 @@ function findDiffentPiece(live_matrix, new_matrix){
 	for(var i=0; i<live_matrix.length; i++){
 		for(var j=0; j<live_matrix[i].length; j++){
 			if(live_matrix[i][j]!=new_matrix[i][j]){
-				return live_matrix[i][j];
+				// console.log("matrix: "+live_matrix[i][j]+" "+new_matrix[i][j]);
+				return new_matrix[i][j];
 			}
 		}
 	}
@@ -774,9 +996,10 @@ function findDiffentPiece(live_matrix, new_matrix){
 }
 
 function findBoardCoordinates(new_matrix, value){
+	// console.log("matrix: "+new_matrix.length);
 	for(var i=0; i<new_matrix.length; i++){
 		for(var j=0; j<new_matrix[i].length; j++){
-			if(new_matrix[i][j]==value){
+			if(new_matrix[i][j]==value&&value!=""){
 				return [i, j];
 			}
 		}
