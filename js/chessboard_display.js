@@ -7,6 +7,8 @@ var king_piece = undefined;
 var king_coordinates = [];
 var kingInCheck = false;
 var movedPieces = [];
+var kingMovedRight = false;
+var kingMovedLeft = false;
 
 $(document).ready(function(){
 	var chess_piece_ids = [ 
@@ -65,16 +67,16 @@ function select(pieceId){
 	current_selected_piece = document.getElementById(pieceId);
 	current_selected_coordinates = findPieceCoordinates(current_selected_piece);
 	// current_selected_movable_ids = shrinkPawnArray(getPawnMovablePlaces(), "checking");
-	current_selected_movable_ids = shrinkContinuosArray(getQueenMovablePlaces(
-														current_selected_coordinates[1],
-														current_selected_coordinates[0] 
-									)
+	current_selected_movable_ids = getMovable(
+		current_selected_piece.id,
+		current_selected_coordinates[1],
+		current_selected_coordinates[0]
 	);
 	// console.log("selected: "+current_selected_piece.id);
 	// console.log("Coordinates: "+current_selected_coordinates);
-	// console.log("Movable "+current_selected_movable_ids);
+	console.log("Movable "+current_selected_movable_ids);
 	current_king_place_id = document.getElementById("player_king").parentElement.id;
-	console.log("King id: "+current_king_place_id);
+	// console.log("King id: "+current_king_place_id);
 	// console.log("KingHasCheck: "+kingHasCheck());
 	// console.log("Attacking Places: "+getAttackingPlaces());
 	// console.log("king has check: "+kingHasCheck());
@@ -85,8 +87,8 @@ function select(pieceId){
 	// console.log("rightRookHasMoved: "+rightRookHasMoved());
 	// console.log("leftRookHasMoved: "+leftRookHasMoved());
 	// console.log("kingHasMoved: "+kingHasMoved());
-	console.log("toRightHasPiecesInBetween: "+toRightRookHasPieces());
-	console.log("toRightHasPiecesInBetween: "+toLeftRookHasPieces());
+	// console.log("toRightHasPiecesInBetween: "+toRightRookHasPieces());
+	// console.log("toRightHasPiecesInBetween: "+toLeftRookHasPieces());
 
 }
 
@@ -122,6 +124,83 @@ function remove(pieceId){
 	}
 }
 
+function kingExtraMoves(kingArray){
+	
+	if(canCastleRight()){
+		kingArray.push("1G")
+	}
+	else if(canCastleLeft()){
+		kingArray.push("1C");
+	}
+
+	return kingArray;
+}
+
+function rookExtraMoves(rookArray){
+	
+	if(kingMovedRight){
+		rookArray.push("1F")
+		kingMovedRight = false;
+	}
+	else if(kingMovedLeft){
+		rookArray.push("1D");
+		kingMovedLeft = false;
+	}
+
+	return rookArray;
+}
+
+function getMovable(pieceId, x, y){
+	var movablePlaces = [];
+	if(isType(pieceId, "pawn")){
+		movablePlaces = shrinkPawnArray(getPawnMovablePlaces(x, y), "playing");
+	}
+	else if(isType(pieceId, "rook")){
+		movablePlaces = rookExtraMoves(shrinkContinuosArray(getRookMovablePlaces(x, y)));
+	}
+	else if(isType(pieceId, "bishop")){
+		movablePlaces = shrinkContinuosArray(getBishopMovablePlaces(x, y));
+	}
+	else if(isType(pieceId, "queen")){
+		movablePlaces = shrinkContinuosArray(getQueenMovablePlaces(x, y));
+	}
+	else if(isType(pieceId, "horse")){
+		movablePlaces = shrinkContinuosArray(getHorseMovablePlaces(x, y));
+	}
+	else if(isType(pieceId, "king")){
+		movablePlaces = kingExtraMoves(getKingMovablePlaces(x, y));
+	}
+
+	return movablePlaces;
+}
+
+function canCastleRight(){
+	if(
+		!kingHasMoved()&&
+		!kingHasCheck()&&
+		!rightRookHasMoved()&&
+		!toRightRookHasCheck()&&
+		!toRightRookHasPieces()&&
+	){
+		return true;
+	}
+
+	return false;
+}
+
+function canCastleLeft(){
+	if(
+		!kingHasMoved()&&
+		!kingHasCheck()&&
+		!leftRookHasMoved()&&
+		!toLeftRookHasCheck()&&
+		!toLeftRookHasPieces()&&
+	){
+		return true;
+	}
+
+	return false;
+}
 
 
 function toRightRookHasPieces(){
@@ -525,17 +604,25 @@ function shrinkPawnArray(array, mechanic_needed){
 	// console.log("pawn "+array[1]);
 	
 	if(mechanic_needed=="playing"){
-		if(array[0]!=""){
-			new_array.push(array[0]);
+		if(array[0]!=null){
+			if(array[0]!=""){
+				new_array.push(array[0]);
+			}
 		}
-		if(array[1]!=""){
-			new_array.push(array[1]);
+		if(array[1]!=null){
+			if(array[1]!=""){
+				new_array.push(array[1]);
+			}
 		}
-		if(array[2]!=""){
-			new_array.push(array[2]);
+		if(array[2]!=null){
+			if(array[2]!=""){
+				new_array.push(array[2]);
+			}
 		}
-		if(array[3]!=""){
-			new_array.push(array[3]);
+		if(array[3]!=null){
+			if(array[3]!=""){
+				new_array.push(array[3]);
+			}
 		}
 	} else {
 		if(array[0]!=""){
