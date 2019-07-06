@@ -9,6 +9,11 @@ var kingInCheck = false;
 var movedPieces = [];
 var kingMovedRight = false;
 var kingMovedLeft = false;
+var playerPawnStartingPositions = [];
+var compPawnStartingPositions = [];
+var playerPawnsHasMoved = [];
+var compPawnsHasMoved = [];
+
 
 $(document).ready(function(){
 	var chess_piece_ids = [ 
@@ -29,12 +34,15 @@ $(document).ready(function(){
 		["player_rook1", "", "player_bishop1", "player_queen", "player_king", "player_bishop2", "player_horse2", "player_rook2"]
 	];
 
+	playerPawnStartingPositions = ["2A", "2B", "2C", "2D", "2E", "2F", "2G", "2H"];
+	compPawnStartingPositions = ["7A", "7B", "7C", "7D", "7E", "7F", "7G", "7H"];
+
 	// var chess_place_ids = get_chess_place_ids(chess_piece_ids);
 	// live_chessboard_matrix = live_chessboard_matrix_gen(chess_place_ids, chess_piece_ids);
 	// var matrixIsSame = matrixSame(live_chessboard_matrix, new_chessboard_matrix);
 	// var diffPiece = findDiffentPiece(live_chessboard_matrix, new_chessboard_matrix);
 	// var diffPieceCoor = findBoardCoordinates(new_chessboard_matrix, diffPiece);
-	// var diffPiecePlaceId = id_gen(diffPieceCoor[0], diffPieceCoor[1]); 
+	var diffPiecePlaceId = id_gen(diffPieceCoor[0], diffPieceCoor[1]); 
 	// console.log("Live matrix: "+
 	// 	matrixIsSame+
 	// 	" "+
@@ -113,9 +121,75 @@ function moveTo(placeId){
 						kingMovedRight = false;
 						kingMovedLeft = false;
 					}
+
+					setPlayerPawnsHasMoved(selectedId);
+					// setCompPawnsHasMoved(selectedId);
 				}
 			}
 
+		}
+	}
+}
+
+function enPassantMovement(rookArray, x, y){
+	var newArray = [];
+	var pawnHasLeft = false;
+	var pawnHasRight = false;
+	var leftOfPawn = id_gen(y, x-1);
+	var rightOfPawn = id_gen(y, x+1);
+	var leftOfPawnElement = document.getElementById(leftOfPawn);
+	var rightOfPawnElement = document.getElementById(rightOfPawn);
+	
+	if(leftOfPawnElement!=null){
+		if(leftOfPawnElement.firstElementChild!=null){
+			if(pawnReadyEnPassant(leftOfPawnElement.firstElementChild.id, leftOfPawn)){
+				rookArray.push(pawnHasLeft);
+			}
+		}
+	}
+
+	if(rightOfPawnElement!=null){
+		if(rightOfPawnElement.firstElementChild!=null){
+			if(pawnReadyEnPassant(rightOfPawnElement.firstElementChild.id, rightOfPawn)){
+				rookArray.push(pawnHasRight);
+			}
+		}
+	}
+}
+
+function pawnReadyEnPassant(pieceId, placeId){
+	if(isType(pieceId, "comp_pawn")){
+		for(var i=0; i<compPawnStartingPositions.length; i++){
+			if(isType(pieceId, i)){
+				var placeIdBefore = findPlaceCoordinates(compPawnStartingPositions[i]);
+				var y = placeIdBefore[1] + 2;
+				var x = placeIdBefore[0];
+				var placeIdAfter = id_gen(y, x);
+				if(placeId==placeIdAfter){
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+function setPlayerPawnsHasMoved(pieceId){
+	if(isType(pieceId, "player_pawn")){
+		for(var i=0; i<playerPawnsHasMoved.length; i++){
+			if(isType(pieceId, i)){
+				playerPawnsHasMoved[i] = true;
+			}
+		}
+	}
+}
+
+function setCompPawnsHasMoved(pieceId){
+	if(isType(pieceId, "comp_pawn")){
+		for(var i=0; i<compPawnsHasMoved.length; i++){
+			if(isType(pieceId, i)){
+				compPawnsHasMoved[i] = true;
+			}
 		}
 	}
 }
