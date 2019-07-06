@@ -10,6 +10,10 @@
   <link href="css/chessboard.css" rel="stylesheet" />           
 </head>
 <body>
+	<div id="ai-comment-container">
+		<div class="ai-opponent-comment" id="ai-comment"></div>
+		<img class="ai-opponent-image" src="robot_pic.jpg"/>
+	</div>
 	<div class="chessboard">
 		<table id='table'>
 		    <tr id='topRow'>
@@ -323,7 +327,6 @@
 	<div id="switch-button" class="btn btn-primary purple" onclick="switchColours();">
 		Switch Colours
 	</div>
-	<br>
 	<script type="text/javascript" src="js/dev_jquery.js"></script>
     <script type="text/javascript" src="js/RobotMovement.js"></script>
     <script type="text/javascript" src="js/chessboard_display.js"></script>

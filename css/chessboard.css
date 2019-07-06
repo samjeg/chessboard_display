@@ -8,20 +8,26 @@
 
 .chessboard {
 	margin-top: 15vh;
-	margin-left: 17.5vw;
-	height: 50vw;
-	width: 50.7vw;
-	border: 5px solid black;
+	margin-left: 25vw;
+	height: 50.5vw;
+	width: 50.5vw;
+	border: 0.5vw solid #000;
 	overflow: hidden;
 	position: absolute;
+	margin-bottom: 10vh;
+	padding: 0px;
+	background-color: #000;
 }
 
 table {
+	margin-top: 0.25vw;
+	margin-left: 0.25vw;
 	height: 50vw;
 	width: 50vw;
 	border: 0px;
 	background-color: #cc6600;
 	padding: 0;
+	border-spacing: 0px;
 }
 
 table tr td {
@@ -43,7 +49,7 @@ table tr td .chesspiece-container .chesspiece {
 	height: 5vw;
 	width: 5vw;
 	text-align: center;
-	font-size: 4.7vw;
+	font-size: 4.2vw;
 	margin-left: 0.6vw;
 	margin-top: 0.6vw;
 	line-height: 5.3vw;
@@ -57,11 +63,6 @@ table tr td .chesspiece-container .chesspiece {
 
 .comp-player {
 	background-color: #404040;
-}
-
-
-
-table tr {
 }
 
 
@@ -93,6 +94,32 @@ table tr {
 	position: absolute;
 }
 
+#ai-comment-container{
+	height: 12vw;
+	width: 80vw;
+	/*background-color: brown;*/
+	margin-top: 10vh;
+	margin-left: 10vw;	
+}
+
+.ai-opponent-image {
+	height: 9vw;
+	width: 9vw;
+	border-radius: 50%;
+	margin-left: 70vw;
+	margin-top: 1.5vw;
+	position: absolute;
+}
+
+.ai-opponent-comment{
+	height: 10vw;
+	width: 72vw;
+	background-color: #A7E7FF;
+	position: absolute;
+	margin-left: 2.5vw;
+	margin-top: 1vw;
+}
+
 
 @media only screen and (max-width: 600px) {
 	.imageframe {
@@ -103,12 +130,60 @@ table tr {
 
 	.chessboard {
 		margin-top: 5vh;
-		margin-left: 7.5vw;
-		height: 70vw;
-		width: 70vw;
-		border: 5px solid black;
+		margin-left: 14.25vw;
+		height: 70.5vw;
+		width: 70.5vw;
+		border: 0.1vw solid #000;
+		overflow: hidden;
+		/*margin-bottom: 10vh;*/
+		padding: 0px;
+		background-color: #000;
+		position: absolute;
 	}
 
-	
+	table {
+		margin-top: 0.25vw;
+		margin-left: 0.25vw;
+		height: 70vw;
+		width: 70vw;
+		border: 0px;
+		background-color: #cc6600;
+		padding: 0;
+		border-spacing: 0px;
+	}
+
+	table tr td {
+		height: 8.6vw;
+		width: 8.6vw;
+  		border: 0px;
+  		padding: 0;
+  		overflow: hidden;
+	}
+
+	table tr td .chesspiece-container {
+		height: 8.6vw;
+		width: 8.6vw;
+		/*background-color: purple;*/
+		overflow: hidden;
+	}
+
+	table tr td .chesspiece-container .chesspiece {
+		height: 7.05vw;
+		width: 7.05vw;
+		text-align: center;
+		font-size: 6vw;
+		margin-left: 0.6vw;
+		margin-top: 0.6vw;
+		line-height: 7vw;
+		border-radius: 50%;
+	}
+
+	#switch-button {
+		height: 5vh;
+		width: 30vw;
+		margin-top: 50vh;
+		margin-left: 35vw;
+		position: absolute;
+	}	
 
 }
