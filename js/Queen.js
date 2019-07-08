@@ -1,0 +1,1 @@
+var chessMech = new ChessMechanics();
