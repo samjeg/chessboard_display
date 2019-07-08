@@ -1,4 +1,4 @@
-class Rook extends ChessTools{
+class Rook extends ChessPiece{
 
 	constructor(){
 		super();

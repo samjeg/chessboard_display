@@ -24,12 +24,12 @@ $(document).ready(function(){
 	chessMech.playerPawnStartingPositions = ["2A", "2B", "2C", "2D", "2E", "2F", "2G", "2H"];
 	chessMech.compPawnStartingPositions = ["7A", "7B", "7C", "7D", "7E", "7F", "7G", "7H"];
 	
-	var chess_place_ids = chessMech.chessTool.get_chess_place_ids(chess_piece_ids);
-	chessMech.chessTool.live_chessboard_matrix = chessMech.chessTool.live_chessboard_matrix_gen(chess_place_ids, chess_piece_ids);
-	var matrixIsSame = chessMech.chessTool.matrixSame(chessMech.chessTool.live_chessboard_matrix, new_chessboard_matrix);
-	var diffPiece = chessMech.chessTool.findDiffentPiece(chessMech.chessTool.live_chessboard_matrix, new_chessboard_matrix);
-	var diffPieceCoor = chessMech.chessTool.findBoardCoordinates(new_chessboard_matrix, diffPiece);
-	var diffPiecePlaceId = chessMech.chessTool.id_gen(diffPieceCoor[0], diffPieceCoor[1]); 
+	var chess_place_ids = chessMech.chessPiece.get_chess_place_ids(chess_piece_ids);
+	chessMech.chessPiece.live_chessboard_matrix = chessMech.chessPiece.live_chessboard_matrix_gen(chess_place_ids, chess_piece_ids);
+	var matrixIsSame = chessMech.chessPiece.matrixSame(chessMech.chessPiece.live_chessboard_matrix, new_chessboard_matrix);
+	var diffPiece = chessMech.chessPiece.findDiffentPiece(chessMech.chessPiece.live_chessboard_matrix, new_chessboard_matrix);
+	var diffPieceCoor = chessMech.chessPiece.findBoardCoordinates(new_chessboard_matrix, diffPiece);
+	var diffPiecePlaceId = chessMech.chessPiece.id_gen(diffPieceCoor[0], diffPieceCoor[1]); 
 	
 	var diffElement = document.getElementById(diffPiece);
 	var diffPlaceElement = document.getElementById(diffPiecePlaceId).appendChild(diffElement);
@@ -68,14 +68,19 @@ class ChessMechanics{
 		this.selectedHighlightMovableIds = [];
 		this.canMovePawn = false;
 		this.isEnPassant = false;
-		this.chessTool = new ChessTools();
+		this.chessPiece = new ChessPiece();
 		this.rook = new Rook();
+		this.bishop = new Bishop();
+		this.queen = new Queen();
+		this.king = new King();
+		this.pawn = new Pawn();
+		this.horse = new Horse();
 	}
 
 	select(pieceId){
 		this.prevSelectedHighlightIds = this.current_selected_movable_ids;
 		this.current_selected_piece = document.getElementById(pieceId);
-		this.current_selected_coordinates = this.chessTool.findPieceCoordinates(this.current_selected_piece);
+		this.current_selected_coordinates = this.chessPiece.findPieceCoordinates(this.current_selected_piece);
 		this.currentEnPassantOpponentPlaceId = "";
 		this.current_selected_movable_ids = this.getMovable(
 			this.current_selected_piece.id,
@@ -107,7 +112,7 @@ class ChessMechanics{
 						if(selectedId=="player_king"&&placeId=="1C"){
 							this.kingMovedLeft = true;
 						}
-						if(this.chessTool.isType(selectedId, "player_rook")){
+						if(this.chessPiece.isType(selectedId, "player_rook")){
 							this.kingMovedRight = false;
 							this.kingMovedLeft = false;
 						}
@@ -142,8 +147,8 @@ class ChessMechanics{
 		var newArray = [];
 		var pawnHasLeft = false;
 		var pawnHasRight = false;
-		var leftOfPawn = this.chessTool.id_gen(y, x-1);
-		var rightOfPawn = this.chessTool.id_gen(y, x+1);
+		var leftOfPawn = this.chessPiece.id_gen(y, x-1);
+		var rightOfPawn = this.chessPiece.id_gen(y, x+1);
 		var leftOfPawnElement = document.getElementById(leftOfPawn);
 		var rightOfPawnElement = document.getElementById(rightOfPawn);
 		if(leftOfPawnElement!=null){
@@ -176,17 +181,17 @@ class ChessMechanics{
 
 	pawnReadyEnPassant(pieceId, placeId){
 		var newPlaceId = "";
-		if(this.chessTool.isType(pieceId, "comp_pawn")){
+		if(this.chessPiece.isType(pieceId, "comp_pawn")){
 			for(var i=0; i<this.compPawnStartingPositions.length; i++){
-				if(this.chessTool.isType(pieceId, String(i+1))){
-					var posBefore = this.chessTool.findPlaceCoordinates(this.compPawnStartingPositions[i]);
+				if(this.chessPiece.isType(pieceId, String(i+1))){
+					var posBefore = this.chessPiece.findPlaceCoordinates(this.compPawnStartingPositions[i]);
 					var y = posBefore[0] + 1;
 					var x = posBefore[1];
-					var posNow = this.chessTool.findPlaceCoordinates(placeId);
+					var posNow = this.chessPiece.findPlaceCoordinates(placeId);
 					var nY = posNow[0] - 1;
 					var nX = posNow[1];
-					var placeIdWithPosBefore = this.chessTool.id_gen(y, x);
-					var placeIdWithPosNow = this.chessTool.id_gen(nY, nX);
+					var placeIdWithPosBefore = this.chessPiece.id_gen(y, x);
+					var placeIdWithPosNow = this.chessPiece.id_gen(nY, nX);
 					if(placeIdWithPosBefore==placeIdWithPosNow){
 						newPlaceId = placeIdWithPosNow;
 						this.currentEnPassantPlaceId = placeIdWithPosNow;
@@ -198,8 +203,8 @@ class ChessMechanics{
 	}
 
 	removeEnPassantOpponent(placeId){
-		var currentCoordinates = this.chessTool.findPlaceCoordinates(placeId);
-		var enPassantOpponentPlaceId = this.chessTool.id_gen(currentCoordinates[0] + 1, currentCoordinates[1]);
+		var currentCoordinates = this.chessPiece.findPlaceCoordinates(placeId);
+		var enPassantOpponentPlaceId = this.chessPiece.id_gen(currentCoordinates[0] + 1, currentCoordinates[1]);
 		var enPassantOpponentPlace = document.getElementById(enPassantOpponentPlaceId);
 		if(enPassantOpponentPlace!=null){
 			var enPassantOpponent = enPassantOpponentPlace.firstElementChild;
@@ -211,9 +216,9 @@ class ChessMechanics{
 	}
 
 	setPlayerPawnsHasMoved(pieceId){
-		if(this.chessTool.isType(pieceId, "player_pawn")){
+		if(this.chessPiece.isType(pieceId, "player_pawn")){
 			for(var i=0; i<this.playerPawnsHasMoved.length; i++){
-				if(this.chessTool.isType(pieceId, String(i+1))){
+				if(this.chessPiece.isType(pieceId, String(i+1))){
 					this.playerPawnsHasMoved[i] = true;
 				}
 			}
@@ -221,9 +226,9 @@ class ChessMechanics{
 	}
 
 	setCompPawnsHasMoved(pieceId){
-		if(this.chessTool.isType(pieceId, "comp_pawn")){
+		if(this.chessPiece.isType(pieceId, "comp_pawn")){
 			for(var i=0; i<this.compPawnsHasMoved.length; i++){
-				if(this.chessTool.isType(pieceId, String(i+1))){
+				if(this.chessPiece.isType(pieceId, String(i+1))){
 					this.compPawnsHasMoved[i] = true;
 				}
 			}
@@ -299,23 +304,23 @@ class ChessMechanics{
 
 	getMovable(pieceId, x, y){
 		var movablePlaces = [];
-		if(this.chessTool.isType(pieceId, "pawn")){
-			movablePlaces = this.enPassantMovement(this.shrinkPawnArray(this.getPawnMovablePlaces(x, y), "playing"), x, y);
+		if(this.chessPiece.isType(pieceId, "pawn")){
+			movablePlaces = this.enPassantMovement(this.shrinkPawnArray(this.pawn.getPawnMovablePlaces(x, y), "playing"), x, y);
 		}
-		else if(this.chessTool.isType(pieceId, "rook")){
-			movablePlaces = this.rookExtraMoves(this.chessTool.shrinkContinuosArray(this.rook.movablePlaces(x, y)));
+		else if(this.chessPiece.isType(pieceId, "rook")){
+			movablePlaces = this.rookExtraMoves(this.chessPiece.shrinkContinuosArray(this.rook.movablePlaces(x, y)));
 		}
-		else if(this.chessTool.isType(pieceId, "bishop")){
-			movablePlaces = this.chessTool.shrinkContinuosArray(this.getBishopMovablePlaces(x, y));
+		else if(this.chessPiece.isType(pieceId, "bishop")){
+			movablePlaces = this.chessPiece.shrinkContinuosArray(this.bishop.getBishopMovablePlaces(x, y));
 		}
-		else if(this.chessTool.isType(pieceId, "queen")){
-			movablePlaces = this.chessTool.shrinkContinuosArray(this.getQueenMovablePlaces(x, y));
+		else if(this.chessPiece.isType(pieceId, "queen")){
+			movablePlaces = this.chessPiece.shrinkContinuosArray(this.queen.getQueenMovablePlaces(x, y));
 		}
-		else if(this.chessTool.isType(pieceId, "horse")){
-			movablePlaces = this.getHorseMovablePlaces(x, y);
+		else if(this.chessPiece.isType(pieceId, "horse")){
+			movablePlaces = this.horse.getHorseMovablePlaces(x, y);
 		}
-		else if(this.chessTool.isType(pieceId, "king")){
-			movablePlaces = this.carefullKing(this.kingExtraMoves(this.getKingMovablePlaces(x, y)));
+		else if(this.chessPiece.isType(pieceId, "king")){
+			movablePlaces = this.carefullKing(this.kingExtraMoves(this.king.getKingMovablePlaces(x, y)));
 		}
 		return movablePlaces;
 	}
@@ -388,7 +393,7 @@ class ChessMechanics{
 	leftRookHasMoved(){
 		for(var i=0; i<this.movedPieces.length; i++){
 			next = this.movedPieces[i];
-			if(this.chessTool.isType(next, "player_rook1")){
+			if(this.chessPiece.isType(next, "player_rook1")){
 				return true;
 			}
 		}
@@ -398,7 +403,7 @@ class ChessMechanics{
 	rightRookHasMoved(){
 		for(var i=0; i<this.movedPieces.length; i++){
 			next = this.movedPieces[i];
-			if(this.chessTool.isType(next, "player_rook2")){
+			if(this.chessPiece.isType(next, "player_rook2")){
 				return true;
 			}
 		}
@@ -408,7 +413,7 @@ class ChessMechanics{
 	kingHasMoved(){
 		for(var i=0; i<this.movedPieces.length; i++){
 			next = this.movedPieces[i];
-			if(this.chessTool.isType(next, "player_king")){
+			if(this.chessPiece.isType(next, "player_king")){
 				return true;
 			}
 		}
@@ -475,7 +480,7 @@ class ChessMechanics{
 
 	getAttackingPlaces(){
 		var king_piece = document.getElementById("player_king");
-		var king_coordinates = this.chessTool.findPieceCoordinates(king_piece);
+		var king_coordinates = this.chessPiece.findPieceCoordinates(king_piece);
 		var x = king_coordinates[1];
 		var y = king_coordinates[0]
 		var attackingPawnPlaces = this.getAttackingPawnPlaces(x, y);
@@ -494,7 +499,7 @@ class ChessMechanics{
 
 	getAttackingPlacesFromPos(placeId){
 		var attackingPlaces = [];
-		var placeCoordinates = this.chessTool.findPlaceCoordinates(placeId);
+		var placeCoordinates = this.chessPiece.findPlaceCoordinates(placeId);
 		var x = placeCoordinates[1];
 		var y = placeCoordinates[0]
 		var attackingPawnPlaces = this.getAttackingPawnPlaces(x, y);
@@ -544,7 +549,7 @@ class ChessMechanics{
 			var nextPlace = document.getElementById(placeId);
 			if(nextPlace.childElementCount!=0){
 				var nextPiece = nextPlace.firstElementChild.id;
-				if(this.chessTool.isType(nextPiece, type)){
+				if(this.chessPiece.isType(nextPiece, type)){
 					array.push(placeId);
 				}
 			}
@@ -601,7 +606,7 @@ class ChessMechanics{
 			if(next!=null){
 				if(next.childElementCount!=0){
 					if(next.firstElementChild!=null){
-						if(this.chessTool.isType(next.firstElementChild.id, "comp_horse")){
+						if(this.chessPiece.isType(next.firstElementChild.id, "comp_horse")){
 							attackingHorsePlaces.push(next.id);
 						}
 					}
@@ -611,43 +616,7 @@ class ChessMechanics{
 		return attackingHorsePlaces;
 	}
 
-	getPawnMovablePlaces(x, y){
-		var matrix = this.chessTool.live_chessboard_matrix;
-		var placeIds = [];
-		if(x>=0&&x<=7&&y>=0&&y<=7){
-			var leftFwd1Element = document.getElementById(this.chessTool.id_gen(y-1, x-1));
-			var rightFwd1Element = document.getElementById(this.chessTool.id_gen(y-1, x+1));
-			var fwd1Element = document.getElementById(this.chessTool.id_gen(y-1, x));
-			var fwd2Element = document.getElementById(this.chessTool.id_gen(y-2, x));
-			if(leftFwd1Element!=null){
-				if(leftFwd1Element.childElementCount!=0){
-					var leftFwd1Id = leftFwd1Element.firstElementChild.id;
-					if(this.chessTool.isType(leftFwd1Id, "comp_")){
-						placeIds[0] = leftFwd1Element.id;
-					}
-				}
-			}
-			if(rightFwd1Element!=null){
-				if(rightFwd1Element.childElementCount!=0){
-					var rightFwd1Id = rightFwd1Element.firstElementChild.id;
-					if(this.chessTool.isType(rightFwd1Id, "comp_")){
-						placeIds[1] = rightFwd1Element.id;
-					}
-				}
-			}
-			if(fwd1Element!=null){
-				if(fwd1Element.childElementCount==0){
-					placeIds[2] = fwd1Element.id;
-				}
-			}
-			if(fwd2Element!=null){
-				if(fwd2Element.childElementCount==0){
-					placeIds[3] = fwd2Element.id;
-				}
-			}
-		}
-		return placeIds;
-	}
+	
 
 	shrinkPawnArray(array, mechanic_needed){
 		var new_array = [];
@@ -678,7 +647,7 @@ class ChessMechanics{
 				if(leftElement!=null){
 					if(leftElement.firstElementChild!=null){
 						piece = leftElement.firstElementChild;
-						if(this.chessTool.isType(piece.id, "comp_pawn")){
+						if(this.chessPiece.isType(piece.id, "comp_pawn")){
 							new_array.push(array[0]);
 						}
 					}
@@ -689,7 +658,7 @@ class ChessMechanics{
 				if(rightElement!=null){
 					if(rightElement.firstElementChild!=null){
 						piece = rightElement.firstElementChild;
-						if(this.chessTool.isType(piece.id, "comp_pawn")){
+						if(this.chessPiece.isType(piece.id, "comp_pawn")){
 							new_array.push(array[1]);
 						}
 					}
@@ -697,175 +666,6 @@ class ChessMechanics{
 			}
 		}
 		return new_array;
-	}
-
-	getHorseMovablePlaces(x, y){
-		var matrix = this.chessTool.live_chessboard_matrix;
-		var placeIds = [];
-		if(x>=0&&x<=7&&y>=0&&y<=7){
-			var topThenRightElement = document.getElementById(this.chessTool.id_gen(y-2, x-1));
-			var topThenLeftElement = document.getElementById(this.chessTool.id_gen(y-2, x+1));
-			var bottomThenRightElement = document.getElementById(this.chessTool.id_gen(y+2, x+1));
-			var bottomThenRightElement = document.getElementById(this.chessTool.id_gen(y+2, x+1));
-			var bottomThenLeftElement = document.getElementById(this.chessTool.id_gen(y+2, x-1));
-			var rightThenTopElement = document.getElementById(this.chessTool.id_gen(y-1, x+2));
-			var rightThenBottomElement = document.getElementById(this.chessTool.id_gen(y+1, x+2));
-			var leftThenTopElement = document.getElementById(this.chessTool.id_gen(y-1, x-2));
-			var leftThenBottomElement = document.getElementById(this.chessTool.id_gen(y+1, x-2));
-			if(topThenRightElement!=null){
-				placeIds.push(topThenRightElement.id);	
-			}
-			if(topThenLeftElement!=null){
-				placeIds.push(topThenLeftElement.id);		
-			}
-			if(bottomThenRightElement!=null){
-				placeIds.push(bottomThenRightElement.id);
-			}
-			if(bottomThenLeftElement!=null){
-				placeIds.push(bottomThenLeftElement.id);
-			}
-			if(rightThenTopElement!=null){
-				placeIds.push(rightThenTopElement.id);
-			}
-			if(rightThenBottomElement!=null){
-				placeIds.push(rightThenBottomElement.id);
-			}
-			if(leftThenTopElement!=null){
-				placeIds.push(leftThenTopElement.id);
-			}
-			if(leftThenBottomElement!=null){
-				placeIds.push(leftThenBottomElement.id);
-			}
-		}
-		return placeIds;
-	}
-
-	
-
-	getBishopMovablePlaces(x, y){
-		var matrix = this.chessTool.live_chessboard_matrix;
-		var placeIds = [];
-		var leftUp = [];
-		var rightUp = [];
-		var leftDown = [];
-		var rightDown = [];
-		if(x>=0&&x<=7&&y>=0&&y<=7){
-			for(var i=0; i<=7; i++){
-				var b_x = x - i;
-				var b_y = y - i;
-				if(b_x<=7&&b_x>=0&&b_y<=7&&b_y>=0){
-					if(b_x<x&&b_y<y){
-						var nextElement = document.getElementById(this.chessTool.id_gen(b_y, b_x));
-						if(nextElement!=null){
-							leftUp[i] = nextElement.id;
-							if(nextElement.childElementCount!=0){
-								break;
-							}
-						}
-					}
-				}
-			}
-			for(var j=0; j<=7; j++){
-				var b_x = x + j;
-				var b_y = y - j;
-				if(b_x<=7&&b_x>=0&&b_y<=7&&b_y>=0){
-					if(b_x>x&&b_y<y){
-						var nextElement = document.getElementById(this.chessTool.id_gen(b_y, b_x));
-						if(nextElement!=null){
-							rightUp[j] = nextElement.id;
-							if(nextElement.childElementCount!=0){
-								break;
-							}
-						}
-					}
-				}
-			}
-			for(var k=0; k<=7; k++){
-				var b_x = x - k;
-				var b_y = y + k;
-				if(b_x<=7&&b_x>=0&&b_y<=7&&b_y>=0){
-					if(b_x<x&&b_y>y){
-						var nextElement = document.getElementById(this.chessTool.id_gen(b_y, b_x));
-						if(nextElement!=null){
-							leftDown[k] = nextElement.id;
-							if(nextElement.childElementCount!=0){
-								break;
-							}
-						}
-					}
-				}
-			}
-			for(var n=0; n<=7; n++){
-				var b_x = x + n;
-				var b_y = y + n;
-				if(b_x<=7&&b_x>=0&&b_y<=7&&b_y>=0){
-					if(b_x>x&&b_y>y){
-						var nextElement = document.getElementById(this.chessTool.id_gen(b_y, b_x));
-						if(nextElement!=null){
-							rightDown[n] = nextElement.id;
-							if(nextElement.childElementCount!=0){
-								break;
-							}
-						}
-					}
-				}
-			}
-		}
-		leftUp = this.chessTool.moveArrayToBack(leftUp);
-		rightUp = this.chessTool.moveArrayToBack(rightUp);
-		leftDown = this.chessTool.moveArrayToBack(leftDown);
-		rightDown = this.chessTool.moveArrayToBack(rightDown);
-		var leftToRight = leftDown.concat(rightUp);
-		var rightToLeft = rightDown.concat(leftUp);
-		placeIds = leftToRight.concat(rightToLeft);
-		return placeIds;
-	}
-
-	getQueenMovablePlaces(x, y){
-		var rookPlaces = this.getRookMovablePlaces(x, y);
-		var bishopPlaces = this.getBishopMovablePlaces(x, y);
-		var place_ids = rookPlaces.concat(bishopPlaces);
-		return place_ids;
-	}
-
-	getKingMovablePlaces(x, y){
-		var matrix = this.chessTool.live_chessboard_matrix;
-		var placeIds = [];
-		if(x>=0&&x<=7&&y>=0&&y<=7){
-			var leftFwdElement = document.getElementById(this.chessTool.id_gen(y-1, x-1));
-			var rightFwdElement = document.getElementById(this.chessTool.id_gen(y-1, x+1));
-			var fwdElement = document.getElementById(this.chessTool.id_gen(y-1, x));
-			var leftBkwdElement = document.getElementById(this.chessTool.id_gen(y+1, x-1));
-			var rightBkwdElement = document.getElementById(this.chessTool.id_gen(y+1, x+1));
-			var bkwdElement = document.getElementById(this.chessTool.id_gen(y+1, x));
-			var rightElement = document.getElementById(this.chessTool.id_gen(y, x+1));
-			var leftElement = document.getElementById(this.chessTool.id_gen(y, x-1));
-			if(fwdElement!=null){
-				placeIds.push(fwdElement.id);
-			}
-			if(bkwdElement!=null){
-				placeIds.push(bkwdElement.id);
-			}
-			if(rightElement!=null){
-				placeIds.push(rightElement.id);
-			}
-			if(leftElement!=null){
-				placeIds.push(leftElement.id);
-			}
-			if(rightFwdElement!=null){
-				placeIds.push(rightFwdElement.id);
-			}
-			if(leftFwdElement!=null){
-				placeIds.push(leftFwdElement.id);
-			}
-			if(rightBkwdElement!=null){
-				placeIds.push(rightBkwdElement.id);
-			}
-			if(leftBkwdElement!=null){
-				placeIds.push(leftBkwdElement.id);
-			}
-		}
-		return placeIds;
 	}
 
 	switchColours(){

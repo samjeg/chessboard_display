@@ -1,4 +1,4 @@
-class ChessTools {
+class ChessPiece {
 
 	constructor(){
 		this.live_chessboard_matrix = undefined;
