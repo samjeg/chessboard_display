@@ -1,7 +1,7 @@
 class ChessTools {
 
 	constructor(){
-		
+		this.live_chessboard_matrix = undefined;
 	}
 
 	moveArrayToBack(array){
