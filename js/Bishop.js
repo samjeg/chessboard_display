@@ -4,6 +4,10 @@ class Bishop extends ChessPiece{
 		super();
 	}
 
+	movablePlaces(x, y){
+		return this.shrinkContinuosArray(this.getBishopMovablePlaces(x, y));
+	}
+
 	getBishopMovablePlaces(x, y){
 		var matrix = this.live_chessboard_matrix;
 		var placeIds = [];
@@ -81,5 +85,44 @@ class Bishop extends ChessPiece{
 		var rightToLeft = rightDown.concat(leftUp);
 		placeIds = leftToRight.concat(rightToLeft);
 		return placeIds;
+	}
+
+	attackingPlaces(isBishop, x, y){
+		var attackingBishopPlaces = this.getBishopMovablePlaces(x, y);
+		var RightDownAttacking = attackingBishopPlaces[23];
+		var LeftUpAttacking = attackingBishopPlaces[31];
+		var LeftDownAttacking = attackingBishopPlaces[7];
+		var RightUpAttacking = attackingBishopPlaces[15];
+		var newAttackingBishopPlaces = [];
+		if(isBishop==true){
+			this.getAttackingPiecesPlaces(RightDownAttacking, newAttackingBishopPlaces, "comp_bishop", "");
+			this.getAttackingPiecesPlaces(LeftUpAttacking, newAttackingBishopPlaces, "comp_bishop", "");
+			this.getAttackingPiecesPlaces(LeftDownAttacking, newAttackingBishopPlaces, "comp_bishop", "");
+			this.getAttackingPiecesPlaces(RightUpAttacking, newAttackingBishopPlaces, "comp_bishop", "");
+		} else {
+			this.getAttackingPiecesPlaces(RightDownAttacking, newAttackingBishopPlaces, "", "comp_queen");
+			this.getAttackingPiecesPlaces(LeftUpAttacking, newAttackingBishopPlaces, "", "comp_queen");
+			this.getAttackingPiecesPlaces(LeftDownAttacking, newAttackingBishopPlaces, "", "comp_queen");
+			this.getAttackingPiecesPlaces(RightUpAttacking, newAttackingBishopPlaces, "", "comp_queen");
+		}
+		return newAttackingBishopPlaces;
+	}
+
+	getAttackingPiecesPlaces(placeId, array, type1, type2){
+		var type = type1;
+		if(type1==""){
+			type = type2;
+		}
+		if(type=="comp_rook"){
+		}
+		if(placeId!=""){
+			var nextPlace = document.getElementById(placeId);
+			if(nextPlace.childElementCount!=0){
+				var nextPiece = nextPlace.firstElementChild.id;
+				if(this.isType(nextPiece, type)){
+					array.push(placeId);
+				}
+			}
+		}
 	}
 }

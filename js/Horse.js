@@ -4,7 +4,7 @@ class Horse extends ChessPiece{
 		super();
 	}
 	
-	getHorseMovablePlaces(x, y){
+	movablePlaces(x, y){
 		var matrix = this.live_chessboard_matrix;
 		var placeIds = [];
 		if(x>=0&&x<=7&&y>=0&&y<=7){
@@ -43,5 +43,23 @@ class Horse extends ChessPiece{
 			}
 		}
 		return placeIds;
+	}
+
+	attackingPlaces(x, y){
+		var horseMovablePlaces = this.movablePlaces(x, y);
+		var attackingHorsePlaces = [];
+		for(var i=0; i<horseMovablePlaces.length; i++){
+			var next = document.getElementById(horseMovablePlaces[i]);
+			if(next!=null){
+				if(next.childElementCount!=0){
+					if(next.firstElementChild!=null){
+						if(this.isType(next.firstElementChild.id, "comp_horse")){
+							attackingHorsePlaces.push(next.id);
+						}
+					}
+				}
+			}
+		}
+		return attackingHorsePlaces;
 	}
 }

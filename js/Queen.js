@@ -4,6 +4,10 @@ class Queen extends ChessPiece{
 		super();
 	}
 
+	movablePlaces(x, y){
+		return this.shrinkContinuosArray(this.getQueenMovablePlaces(x, y));
+	}
+
 	getQueenMovablePlaces(x, y){
 		var rookPlaces = this.getRookMovablePlaces(x, y);
 		var bishopPlaces = this.getBishopMovablePlaces(x, y);

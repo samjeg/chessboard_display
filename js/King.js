@@ -4,7 +4,6 @@ class King extends ChessPiece{
 		super();
 	}
 	
-
 	getKingMovablePlaces(x, y){
 		var matrix = this.live_chessboard_matrix;
 		var placeIds = [];
@@ -43,5 +42,15 @@ class King extends ChessPiece{
 			}
 		}
 		return placeIds;
+	}
+
+	kingHasMoved(movedPieces){
+		for(var i=0; i<movedPieces.length; i++){
+			var next = movedPieces[i];
+			if(this.isType(next, "player_king")){
+				return true;
+			}
+		}
+		return false;
 	}
 }

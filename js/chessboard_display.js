@@ -68,6 +68,7 @@ class ChessMechanics{
 		this.selectedHighlightMovableIds = [];
 		this.canMovePawn = false;
 		this.isEnPassant = false;
+		this.checkerGetter = new CheckerGetter();
 		this.chessPiece = new ChessPiece();
 		this.rook = new Rook();
 		this.bishop = new Bishop();
@@ -82,6 +83,13 @@ class ChessMechanics{
 		this.current_selected_piece = document.getElementById(pieceId);
 		this.current_selected_coordinates = this.chessPiece.findPieceCoordinates(this.current_selected_piece);
 		this.currentEnPassantOpponentPlaceId = "";
+		console.log("Movable Params: "+
+			this.current_selected_piece.id+
+			" "+
+			this.current_selected_coordinates[1]+
+			" "+
+			this.current_selected_coordinates[0]
+		);
 		this.current_selected_movable_ids = this.getMovable(
 			this.current_selected_piece.id,
 			this.current_selected_coordinates[1],
@@ -291,381 +299,53 @@ class ChessMechanics{
 		return rookArray;
 	}
 
-	carefullKing(kingArray){
-		var newArray = []; 
-		for(var i=0; i<kingArray.length; i++){
-			var next = kingArray[i];
-			if(!this.placeHasCheck(next)){
-				newArray.push(next);
-			} 
-		}
-		return newArray;
-	}
-
 	getMovable(pieceId, x, y){
 		var movablePlaces = [];
 		if(this.chessPiece.isType(pieceId, "pawn")){
-			movablePlaces = this.enPassantMovement(this.shrinkPawnArray(this.pawn.getPawnMovablePlaces(x, y), "playing"), x, y);
+			movablePlaces = this.enPassantMovement(this.pawn.movablePlaces(x, y), x, y);
 		}
 		else if(this.chessPiece.isType(pieceId, "rook")){
-			movablePlaces = this.rookExtraMoves(this.chessPiece.shrinkContinuosArray(this.rook.movablePlaces(x, y)));
+			movablePlaces = this.rookExtraMoves(this.rook.movablePlaces(x, y));
 		}
 		else if(this.chessPiece.isType(pieceId, "bishop")){
-			movablePlaces = this.chessPiece.shrinkContinuosArray(this.bishop.getBishopMovablePlaces(x, y));
+			movablePlaces = this.bishop.movablePlaces(x, y);
 		}
 		else if(this.chessPiece.isType(pieceId, "queen")){
-			movablePlaces = this.chessPiece.shrinkContinuosArray(this.queen.getQueenMovablePlaces(x, y));
+			movablePlaces = this.queen.movablePlaces(x, y);
 		}
 		else if(this.chessPiece.isType(pieceId, "horse")){
-			movablePlaces = this.horse.getHorseMovablePlaces(x, y);
+			movablePlaces = this.horse.movablePlaces(x, y);
 		}
 		else if(this.chessPiece.isType(pieceId, "king")){
-			movablePlaces = this.carefullKing(this.kingExtraMoves(this.king.getKingMovablePlaces(x, y)));
+			movablePlaces = this.checkerGetter.carefullKing(this.kingExtraMoves(this.king.getKingMovablePlaces(x, y)));
 		}
 		return movablePlaces;
 	}
 
 	canCastleRight(){
 		if(
-			!this.kingHasMoved()&&
-			!this.kingHasCheck()&&
-			!this.rightRookHasMoved()&&
-			!this.toRightRookHasCheck()&&
-			!this.toRightRookHasPieces()
+			!this.king.kingHasMoved(this.movedPieces)&&
+			!this.checkerGetter.kingHasCheck()&&
+			!this.rook.rightRookHasMoved(this.movedPieces)&&
+			!this.checkerGetter.toRightRookHasCheck()&&
+			!this.rook.toRightRookHasPieces()
 		){
 			return true;
 		}
 		return false;
 	}
+
 	canCastleLeft(){
 		if(
-			!this.kingHasMoved()&&
-			!this.kingHasCheck()&&
-			!this.leftRookHasMoved()&&
-			!this.toLeftRookHasCheck()&&
-			!this.toLeftRookHasPieces()
+			!this.king.kingHasMoved(this.movedPieces)&&
+			!this.checkerGetter.kingHasCheck()&&
+			!this.rook.leftRookHasMoved(this.movedPieces)&&
+			!this.checkerGetter.toLeftRookHasCheck()&&
+			!this.rook.toLeftRookHasPieces()
 		){
 			return true;
 		}
 		return false;
-	}
-
-	toRightRookHasPieces(){
-		var toRightRookPlaces = ["1F", "1G"];
-		var first = document.getElementById(toRightRookPlaces[0]);
-		if(first!=null){
-			if(first.firstElementChild!=null){
-				return true;
-			}
-		}
-		var second = document.getElementById(toRightRookPlaces[1]);
-		if(second!=null){
-			if(second.firstElementChild!=null){
-				return true;
-			}
-		}
-		return false;
-	}
-
-	toLeftRookHasPieces(){
-		var toLeftRookPlaces = ["1D", "1C", "1B"];
-		var first = document.getElementById(toLeftRookPlaces[0]);
-		if(first!=null){
-			if(first.firstElementChild!=null){
-				return true;
-			}
-		}
-		var second = document.getElementById(toLeftRookPlaces[1]);
-		if(second!=null){
-			if(second.firstElementChild!=null){
-				return true;
-			}
-		}
-		var third = document.getElementById(toLeftRookPlaces[2]);
-		if(third!=null){
-			if(third.firstElementChild!=null){
-				return true;
-			}
-		}
-		return false;
-	}
-
-	leftRookHasMoved(){
-		for(var i=0; i<this.movedPieces.length; i++){
-			next = this.movedPieces[i];
-			if(this.chessPiece.isType(next, "player_rook1")){
-				return true;
-			}
-		}
-		return false;
-	}
-
-	rightRookHasMoved(){
-		for(var i=0; i<this.movedPieces.length; i++){
-			next = this.movedPieces[i];
-			if(this.chessPiece.isType(next, "player_rook2")){
-				return true;
-			}
-		}
-		return false;
-	}
-
-	kingHasMoved(){
-		for(var i=0; i<this.movedPieces.length; i++){
-			next = this.movedPieces[i];
-			if(this.chessPiece.isType(next, "player_king")){
-				return true;
-			}
-		}
-		return false;
-	}
-
-	kingHasCheck(){
-		var attackingPlaces = this.getAttackingPlaces();
-		if(attackingPlaces.length>0){
-			return true;
-		}
-		return false;
-	}
-
-	placeHasCheck(placeId){
-		var attackingPlaces = this.getAttackingPlacesFromPos(placeId);
-		if(attackingPlaces.length>0){
-			return true;
-		}
-		return false;
-	}
-
-	toRightRookHasCheck(){
-		var toRightRookPlaces = ["1F", "1G"];
-		if(this.placeHasCheck(toRightRookPlaces[0])){
-			return true;
-		}
-		if(this.placeHasCheck(toRightRookPlaces[1])){
-			return true;
-		}
-		return false;
-	}
-
-	toLeftRookHasCheck(){
-		var toLeftRookPlaces = ["1D", "1C", "1B"];
-		if(this.placeHasCheck(toLeftRookPlaces[0])){
-			console.log("1D: "+toLeftRookPlaces[0]);
-			return true;
-		}
-		if(this.placeHasCheck(toLeftRookPlaces[1])){
-			console.log("1C: "+toLeftRookPlaces[1]);
-			return true;
-		}
-		if(this.placeHasCheck(toLeftRookPlaces[2])){
-			console.log("1B: "+toLeftRookPlaces[2]);
-			return true;
-		}
-		return false;
-	}
-
-	leftRookHasCheck(){
-		if(this.placeHasCheck("1A")){
-			return true;
-		}
-		return false;
-	}
-
-	rightRookHasCheck(){
-		if(this.placeHasCheck("1H")){
-			return true;
-		}
-		return false;
-	}
-
-	getAttackingPlaces(){
-		var king_piece = document.getElementById("player_king");
-		var king_coordinates = this.chessPiece.findPieceCoordinates(king_piece);
-		var x = king_coordinates[1];
-		var y = king_coordinates[0]
-		var attackingPawnPlaces = this.getAttackingPawnPlaces(x, y);
-		var attackingHorsePlaces = this.getAttackingHorsePlaces(x, y);
-		var attackingRookPlaces = this.getAttackingRookPlaces(true, x, y);
-		var attackingBishopPlaces = this.getAttackingBishopPlaces(true, x, y);
-		var queen1 = this.getAttackingRookPlaces(false, x, y);
-		var queen2 = this.getAttackingBishopPlaces(false, x, y);
-		var attackingQueenPlaces = queen1.concat(queen2);
-		var attackingPlaces = attackingPawnPlaces.concat(attackingHorsePlaces)
-		.concat(attackingRookPlaces)
-		.concat(attackingBishopPlaces)
-		.concat(attackingQueenPlaces);
-		return attackingPlaces;
-	}
-
-	getAttackingPlacesFromPos(placeId){
-		var attackingPlaces = [];
-		var placeCoordinates = this.chessPiece.findPlaceCoordinates(placeId);
-		var x = placeCoordinates[1];
-		var y = placeCoordinates[0]
-		var attackingPawnPlaces = this.getAttackingPawnPlaces(x, y);
-		var attackingHorsePlaces = this.getAttackingHorsePlaces(x, y);
-		var attackingRookPlaces = this.getAttackingRookPlaces(true, x, y);
-		var attackingBishopPlaces = this.getAttackingBishopPlaces(true, x, y);
-		var queen1 = this.getAttackingRookPlaces(false, x, y);
-		var queen2 = this.getAttackingBishopPlaces(false, x, y);
-		var attackingQueenPlaces = queen1.concat(queen2);
-		var attackingPlaces = attackingPawnPlaces.concat(attackingHorsePlaces)
-		.concat(attackingRookPlaces)
-		.concat(attackingBishopPlaces)
-		.concat(attackingQueenPlaces);
-		return attackingPlaces;
-	}
-
-	getAttackingPawnPlaces(x, y){
-		var attackingPawnPlaces = this.shrinkPawnArray(getPawnMovablePlaces(x, y), "checking");
-		var new_array = [];
-		var first = document.getElementById(attackingPawnPlaces[0]);
-		if(first!=null){
-			if(first.firstElementChild!=null){
-				if(this.placeHasCheck(attackingPawnPlaces[0])){
-					new_array.push(attackingPawnPlaces[0]);
-				}		
-			}
-		}
-		var second = document.getElementById(attackingPawnPlaces[1]);
-		if(second!=null){
-			if(second.firstElementChild!=null){
-				if(this.placeHasCheck(attackingPawnPlaces[1])){
-					new_array.push(attackingPawnPlaces[0]);
-				}		
-			}
-		}
-		return new_array;
-	}
-
-	getAttackingPiecesPlaces(placeId, array, type1, type2){
-		var type = type1;
-		if(type1==""){
-			type = type2;
-		}
-		if(type=="comp_rook"){
-		}
-		if(placeId!=""){
-			var nextPlace = document.getElementById(placeId);
-			if(nextPlace.childElementCount!=0){
-				var nextPiece = nextPlace.firstElementChild.id;
-				if(this.chessPiece.isType(nextPiece, type)){
-					array.push(placeId);
-				}
-			}
-		}
-	}
-
-	getAttackingRookPlaces(isRook, x, y){
-		var attackingRookPlaces = this.getRookMovablePlaces(x, y);
-		var rookFwdAttacking = attackingRookPlaces[23];
-		var rookBkwdAttacking = attackingRookPlaces[31];
-		var rookRightAttacking = attackingRookPlaces[7];
-		var rookLeftAttacking = attackingRookPlaces[15];
-		var newAttackingRookPlaces = [];
-		if(isRook==true){
-			this.getAttackingPiecesPlaces(rookFwdAttacking, newAttackingRookPlaces, "comp_rook", "");
-			this.getAttackingPiecesPlaces(rookBkwdAttacking, newAttackingRookPlaces, "comp_rook", "");
-			this.getAttackingPiecesPlaces(rookRightAttacking, newAttackingRookPlaces, "comp_rook", "");
-			this.getAttackingPiecesPlaces(rookLeftAttacking, newAttackingRookPlaces, "comp_rook", "");
-		} else {
-			this.getAttackingPiecesPlaces(rookFwdAttacking, newAttackingRookPlaces, "", "comp_queen");
-			this.getAttackingPiecesPlaces(rookBkwdAttacking, newAttackingRookPlaces, "", "comp_queen");
-			this.getAttackingPiecesPlaces(rookRightAttacking, newAttackingRookPlaces, "", "comp_queen");
-			this.getAttackingPiecesPlaces(rookLeftAttacking, newAttackingRookPlaces, "", "comp_queen");
-		}
-		return newAttackingRookPlaces;
-	}
-
-	getAttackingBishopPlaces(isBishop, x, y){
-		var attackingBishopPlaces = this.getBishopMovablePlaces(x, y);
-		var RightDownAttacking = attackingBishopPlaces[23];
-		var LeftUpAttacking = attackingBishopPlaces[31];
-		var LeftDownAttacking = attackingBishopPlaces[7];
-		var RightUpAttacking = attackingBishopPlaces[15];
-		var newAttackingBishopPlaces = [];
-		if(isBishop==true){
-			this.getAttackingPiecesPlaces(RightDownAttacking, newAttackingBishopPlaces, "comp_bishop", "");
-			this.getAttackingPiecesPlaces(LeftUpAttacking, newAttackingBishopPlaces, "comp_bishop", "");
-			this.getAttackingPiecesPlaces(LeftDownAttacking, newAttackingBishopPlaces, "comp_bishop", "");
-			this.getAttackingPiecesPlaces(RightUpAttacking, newAttackingBishopPlaces, "comp_bishop", "");
-		} else {
-			this.etAttackingPiecesPlaces(RightDownAttacking, newAttackingBishopPlaces, "", "comp_queen");
-			this.getAttackingPiecesPlaces(LeftUpAttacking, newAttackingBishopPlaces, "", "comp_queen");
-			this.getAttackingPiecesPlaces(LeftDownAttacking, newAttackingBishopPlaces, "", "comp_queen");
-			this.getAttackingPiecesPlaces(RightUpAttacking, newAttackingBishopPlaces, "", "comp_queen");
-		}
-		return newAttackingBishopPlaces;
-	}
-
-	getAttackingHorsePlaces(x, y){
-		var horseMovablePlaces = this.getHorseMovablePlaces(x, y);
-		var attackingHorsePlaces = [];
-		for(var i=0; i<horseMovablePlaces.length; i++){
-			next = document.getElementById(horseMovablePlaces[i]);
-			if(next!=null){
-				if(next.childElementCount!=0){
-					if(next.firstElementChild!=null){
-						if(this.chessPiece.isType(next.firstElementChild.id, "comp_horse")){
-							attackingHorsePlaces.push(next.id);
-						}
-					}
-				}
-			}
-		}
-		return attackingHorsePlaces;
-	}
-
-	
-
-	shrinkPawnArray(array, mechanic_needed){
-		var new_array = [];
-		if(mechanic_needed=="playing"){
-			if(array[0]!=null){
-				if(array[0]!=""){
-					new_array.push(array[0]);
-				}
-			}
-			if(array[1]!=null){
-				if(array[1]!=""){
-					new_array.push(array[1]);
-				}
-			}
-			if(array[2]!=null){
-				if(array[2]!=""){
-					new_array.push(array[2]);
-				}
-			}
-			if(array[3]!=null){
-				if(array[3]!=""){
-					new_array.push(array[3]);
-				}
-			}
-		} else {
-			if(array[0]!=""){
-				leftElement = document.getElementById(array[0]);
-				if(leftElement!=null){
-					if(leftElement.firstElementChild!=null){
-						piece = leftElement.firstElementChild;
-						if(this.chessPiece.isType(piece.id, "comp_pawn")){
-							new_array.push(array[0]);
-						}
-					}
-				}
-			}
-			if(array[1]!=""){
-				rightElement = document.getElementById(array[1]);
-				if(rightElement!=null){
-					if(rightElement.firstElementChild!=null){
-						piece = rightElement.firstElementChild;
-						if(this.chessPiece.isType(piece.id, "comp_pawn")){
-							new_array.push(array[1]);
-						}
-					}
-				}
-			}
-		}
-		return new_array;
 	}
 
 	switchColours(){
