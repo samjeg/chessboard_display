@@ -4,10 +4,29 @@ class Pawn extends ChessPiece{
 		super();
 	}
 
-	movablePlaces(x, y){
+	movablePlaces(
+		compPawnStartingPositions, 
+		currentEnPassantPlaceId,
+		enPassantOpponentLeft, 
+		enPassantOpponentRight, 
+		isEnPassant, 
+		currentEnPassantOpponentPlaceId, 
+		x, 
+		y
+	){
 		// console.log("pawn: "+this.getPawnMovablePlaces(x, y)+" "+x+" "+y);
 		// console.log("shrunken pawn: "+this.shrinkPawnArray(this.getPawnMovablePlaces(x, y), "playing"));
-		return this.shrinkPawnArray(this.getPawnMovablePlaces(x, y), "playing");
+		return this.enPassantMovement(
+			compPawnStartingPositions, 
+			currentEnPassantPlaceId,
+			enPassantOpponentLeft, 
+			enPassantOpponentRight, 
+			isEnPassant, 
+			currentEnPassantOpponentPlaceId,
+			this.shrinkPawnArray(this.getPawnMovablePlaces(x, y), "playing"),
+			x,
+			y
+		);
 	}
 
 	getPawnMovablePlaces(x, y){
@@ -131,4 +150,111 @@ class Pawn extends ChessPiece{
 		return new_array;
 	}
 
+	enPassantMovement(
+		compPawnStartingPositions, 
+		currentEnPassantPlaceId, 
+		enPassantOpponentLeft, 
+		enPassantOpponentRight, 
+		isEnPassant, 
+		currentEnPassantOpponentPlaceId, 
+		rookArray, 
+		x,
+		y 
+	){
+		var newArray = [];
+		var pawnHasLeft = false;
+		var pawnHasRight = false;
+		var leftOfPawn = this.id_gen(y, x-1);
+		var rightOfPawn = this.id_gen(y, x+1);
+		var leftOfPawnElement = document.getElementById(leftOfPawn);
+		var rightOfPawnElement = document.getElementById(rightOfPawn);
+		if(leftOfPawnElement!=null){
+			if(leftOfPawnElement.firstElementChild!=null){
+				var enPassantSpace = this.pawnReadyEnPassant(
+					compPawnStartingPositions, 
+					currentEnPassantPlaceId,
+					leftOfPawnElement.firstElementChild.id, 
+					leftOfPawn
+				);
+				console.log("Pawn ready: "+enPassantSpace);
+				if(enPassantSpace!=""){
+					rookArray.push(enPassantSpace);
+					enPassantOpponentLeft = leftOfPawnElement.firstElementChild.id;
+					currentEnPassantOpponentPlaceId = leftOfPawn;
+					isEnPassant = true;
+					console.log("En Passant left: "+enPassantSpace);
+				}
+			}
+		}
+		if(rightOfPawnElement!=null){
+			if(rightOfPawnElement.firstElementChild!=null){
+				var enPassantSpace = this.pawnReadyEnPassant(
+					compPawnStartingPositions, 
+					currentEnPassantPlaceId,
+					rightOfPawnElement.firstElementChild.id, 
+					rightOfPawn
+				);
+				if(enPassantSpace!=""){
+					rookArray.push(enPassantSpace);
+					enPassantOpponentRight = rightOfPawnElement.firstElementChild.id;
+					currentEnPassantOpponentPlaceId = rightOfPawn;
+					isEnPassant = true;
+					console.log("En Passant right: "+enPassantSpace);
+				}
+			}
+		}
+		return rookArray;
+	}
+
+	pawnReadyEnPassant(compPawnStartingPositions, currentEnPassantPlaceId, pieceId, placeId){
+		var newPlaceId = "";
+		console.log("PieceId: "+pieceId);
+		if(this.isType(pieceId, "comp_pawn")){
+			for(var i=0; i<compPawnStartingPositions.length; i++){
+				if(this.isType(pieceId, String(i+1))){
+					var posBefore = this.findPlaceCoordinates(compPawnStartingPositions[i]);
+					var y = posBefore[0] + 1;
+					var x = posBefore[1];
+					var posNow = this.findPlaceCoordinates(placeId);
+					var nY = posNow[0] - 1;
+					var nX = posNow[1];
+					var placeIdWithPosBefore = this.id_gen(y, x);
+					var placeIdWithPosNow = this.id_gen(nY, nX);
+					if(placeIdWithPosBefore==placeIdWithPosNow){
+						newPlaceId = placeIdWithPosNow;
+						currentEnPassantPlaceId = placeIdWithPosNow;
+					}
+				}
+			}
+		}
+		return newPlaceId;
+	}
+
+	removeEnPassantOpponent(currentEnPassantOpponentPlaceId, placeId){
+		var currentCoordinates = this.findPlaceCoordinates(placeId);
+		var enPassantOpponentPlaceId = this.id_gen(currentCoordinates[0] + 1, currentCoordinates[1]);
+		var enPassantOpponentPlace = document.getElementById(enPassantOpponentPlaceId);
+		if(enPassantOpponentPlace!=null){
+			var enPassantOpponent = enPassantOpponentPlace.firstElementChild;
+			if(enPassantOpponent!=null){
+				this.removeEnPassantOpponentHelper(currentEnPassantOpponentPlaceId, enPassantOpponent.id);
+			}
+		}
+		currentEnPassantPlaceId = "";
+	}
+
+	removeEnPassantOpponentHelper(currentEnPassantOpponentPlaceId, pieceId){
+		var current_element = document.getElementById(pieceId);
+		var parent_id = current_element.parentElement.id;
+		var parent_element = document.getElementById(parent_id);
+		if(current_element!=null){
+			if(parent_element!=null){
+				if(currentEnPassantOpponentPlaceId!=""||currentEnPassantOpponentPlaceId!=null){
+					if(parent_id==currentEnPassantOpponentPlaceId){
+						parent_element.removeChild(current_element);
+					}
+				}
+			}
+		}
+	}
 }

@@ -126,7 +126,7 @@ class ChessMechanics{
 						}
 						if(this.currentEnPassantPlaceId!=""||this.currentEnPassantPlaceId!=null){
 							if(placeId==this.currentEnPassantPlaceId){
-								this.removeEnPassantOpponent(placeId);	
+								this.removeEnPassantOpponent(this.currentEnPassantOpponentPlaceId, placeId);	
 							}
 						}
 						this.setPlayerPawnsHasMoved(selectedId);
@@ -149,78 +149,6 @@ class ChessMechanics{
 			var next = this.selectedHighlights[i];
 			next.style.backgroundColor = "";
 		}
-	}
-
-	enPassantMovement(rookArray, x, y){
-		var newArray = [];
-		var pawnHasLeft = false;
-		var pawnHasRight = false;
-		var leftOfPawn = this.chessPiece.id_gen(y, x-1);
-		var rightOfPawn = this.chessPiece.id_gen(y, x+1);
-		var leftOfPawnElement = document.getElementById(leftOfPawn);
-		var rightOfPawnElement = document.getElementById(rightOfPawn);
-		if(leftOfPawnElement!=null){
-			if(leftOfPawnElement.firstElementChild!=null){
-				var enPassantSpace = this.pawnReadyEnPassant(leftOfPawnElement.firstElementChild.id, leftOfPawn);
-				console.log("Pawn ready: "+enPassantSpace);
-				if(enPassantSpace!=""){
-					rookArray.push(enPassantSpace);
-					this.enPassantOpponentLeft = leftOfPawnElement.firstElementChild.id;
-					this.currentEnPassantOpponentPlaceId = leftOfPawn;
-					this.isEnPassant = true;
-					console.log("En Passant left: "+enPassantSpace);
-				}
-			}
-		}
-		if(rightOfPawnElement!=null){
-			if(rightOfPawnElement.firstElementChild!=null){
-				var enPassantSpace = this.pawnReadyEnPassant(rightOfPawnElement.firstElementChild.id, rightOfPawn)
-				if(enPassantSpace!=""){
-					rookArray.push(enPassantSpace);
-					this.enPassantOpponentRight = rightOfPawnElement.firstElementChild.id;
-					this.currentEnPassantOpponentPlaceId = rightOfPawn;
-					this.isEnPassant = true;
-					console.log("En Passant right: "+enPassantSpace);
-				}
-			}
-		}
-		return rookArray;
-	}
-
-	pawnReadyEnPassant(pieceId, placeId){
-		var newPlaceId = "";
-		if(this.chessPiece.isType(pieceId, "comp_pawn")){
-			for(var i=0; i<this.compPawnStartingPositions.length; i++){
-				if(this.chessPiece.isType(pieceId, String(i+1))){
-					var posBefore = this.chessPiece.findPlaceCoordinates(this.compPawnStartingPositions[i]);
-					var y = posBefore[0] + 1;
-					var x = posBefore[1];
-					var posNow = this.chessPiece.findPlaceCoordinates(placeId);
-					var nY = posNow[0] - 1;
-					var nX = posNow[1];
-					var placeIdWithPosBefore = this.chessPiece.id_gen(y, x);
-					var placeIdWithPosNow = this.chessPiece.id_gen(nY, nX);
-					if(placeIdWithPosBefore==placeIdWithPosNow){
-						newPlaceId = placeIdWithPosNow;
-						this.currentEnPassantPlaceId = placeIdWithPosNow;
-					}
-				}
-			}
-		}
-		return newPlaceId;
-	}
-
-	removeEnPassantOpponent(placeId){
-		var currentCoordinates = this.chessPiece.findPlaceCoordinates(placeId);
-		var enPassantOpponentPlaceId = this.chessPiece.id_gen(currentCoordinates[0] + 1, currentCoordinates[1]);
-		var enPassantOpponentPlace = document.getElementById(enPassantOpponentPlaceId);
-		if(enPassantOpponentPlace!=null){
-			var enPassantOpponent = enPassantOpponentPlace.firstElementChild;
-			if(enPassantOpponent!=null){
-				this.removeEnPassantOpponentHelper(enPassantOpponent.id);
-			}
-		}
-		currentEnPassantPlaceId = "";
 	}
 
 	setPlayerPawnsHasMoved(pieceId){
@@ -263,21 +191,6 @@ class ChessMechanics{
 		}
 	}
 
-	removeEnPassantOpponentHelper(pieceId){
-		var current_element = document.getElementById(pieceId);
-		var parent_id = current_element.parentElement.id;
-		var parent_element = document.getElementById(parent_id);
-		if(current_element!=null){
-			if(parent_element!=null){
-				if(this.currentEnPassantOpponentPlaceId!=""||this.currentEnPassantOpponentPlaceId!=null){
-					if(parent_id==this.currentEnPassantOpponentPlaceId){
-						parent_element.removeChild(current_element);
-					}
-				}
-			}
-		}
-	}
-
 	kingExtraMoves(kingArray){
 		if(this.canCastleRight()){
 			kingArray.push("1G")
@@ -302,7 +215,16 @@ class ChessMechanics{
 	getMovable(pieceId, x, y){
 		var movablePlaces = [];
 		if(this.chessPiece.isType(pieceId, "pawn")){
-			movablePlaces = this.enPassantMovement(this.pawn.movablePlaces(x, y), x, y);
+			movablePlaces = this.pawn.movablePlaces(
+				this.compPawnStartingPositions, 
+				this.currentEnPassantPlaceId,
+				this.enPassantOpponentLeft, 
+				this.enPassantOpponentRight, 
+				this.isEnPassant, 
+				this.currentEnPassantOpponentPlaceId,
+				x, 
+				y
+			);
 		}
 		else if(this.chessPiece.isType(pieceId, "rook")){
 			movablePlaces = this.rookExtraMoves(this.rook.movablePlaces(x, y));
