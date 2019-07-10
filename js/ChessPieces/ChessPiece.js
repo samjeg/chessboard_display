@@ -46,14 +46,13 @@ class ChessPiece {
 		var fstAttr = this.first_coordinate_gen(parseInt(parent_id.charAt(0)));
 		var secAttr = this.second_coordinate_gen(parent_id.charAt(1));
 		var coordinates = [fstAttr, secAttr];
+		
 		return coordinates;
 	}
 
 	isType(pieceId, target_piece){
 		var new_target_piece = target_piece;
-		var count = 0;
-		var found = false;
-		var keep_looking = true;
+
 		for(var j=0; j<pieceId.length; j++){
 			if(pieceId.charAt(j)==new_target_piece.charAt(0)){
 				new_target_piece = new_target_piece.substr(1);
