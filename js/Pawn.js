@@ -2,6 +2,10 @@ class Pawn extends ChessPiece{
 
 	constructor(){
 		super();
+		this.opponentPlaceIsSetEnPassant = false;
+		this.opponentPlaceEnPassant = null;
+		this.placeIsSetEnPassant = false;
+		this.placeEnPassant = null;
 	}
 
 	movablePlaces(
@@ -14,6 +18,7 @@ class Pawn extends ChessPiece{
 		x, 
 		y
 	){
+		
 		// console.log("pawn: "+this.getPawnMovablePlaces(x, y)+" "+x+" "+y);
 		// console.log("shrunken pawn: "+this.shrinkPawnArray(this.getPawnMovablePlaces(x, y), "playing"));
 		return this.enPassantMovement(
@@ -28,6 +33,22 @@ class Pawn extends ChessPiece{
 			y
 		);
 	}
+
+    getEnPassantPlace(){
+    	if(this.placeIsSetEnPassant){
+    		this.placeIsSetEnPassant = true;
+    		return this.placeEnPassant;
+    	}
+    	return undefined;
+    }
+
+     getEnPassantOpponentPlace(){
+    	if(this.opponentPlaceIsSetEnPassant){
+    		this.opponentPlaceIsSetEnPassant = false;
+    		return this.opponentPlaceEnPassant;
+    	}
+    	return undefined;
+    }
 
 	getPawnMovablePlaces(x, y){
 		var matrix = this.live_chessboard_matrix;
@@ -176,16 +197,20 @@ class Pawn extends ChessPiece{
 					leftOfPawnElement.firstElementChild.id, 
 					leftOfPawn
 				);
-				console.log("Pawn ready: "+enPassantSpace);
+				console.log("Curr en pass move: "+currentEnPassantPlaceId);
+				// console.log("Pawn ready: "+enPassantSpace);
 				if(enPassantSpace!=""){
 					rookArray.push(enPassantSpace);
 					enPassantOpponentLeft = leftOfPawnElement.firstElementChild.id;
 					currentEnPassantOpponentPlaceId = leftOfPawn;
 					isEnPassant = true;
-					console.log("En Passant left: "+enPassantSpace);
+					this.opponentPlaceIsSetEnPassant = true;
+					this.opponentPlaceEnPassant = leftOfPawn;
+					// console.log("En Passant left: "+enPassantSpace);
 				}
 			}
 		}
+
 		if(rightOfPawnElement!=null){
 			if(rightOfPawnElement.firstElementChild!=null){
 				var enPassantSpace = this.pawnReadyEnPassant(
@@ -199,7 +224,9 @@ class Pawn extends ChessPiece{
 					enPassantOpponentRight = rightOfPawnElement.firstElementChild.id;
 					currentEnPassantOpponentPlaceId = rightOfPawn;
 					isEnPassant = true;
-					console.log("En Passant right: "+enPassantSpace);
+					this.opponentPlaceIsSetEnPassant = true;
+					this.opponentPlaceEnPassant = rightOfPawn;
+					// console.log("En Passant right: "+enPassantSpace);
 				}
 			}
 		}
@@ -208,7 +235,7 @@ class Pawn extends ChessPiece{
 
 	pawnReadyEnPassant(compPawnStartingPositions, currentEnPassantPlaceId, pieceId, placeId){
 		var newPlaceId = "";
-		console.log("PieceId: "+pieceId);
+		// console.log("PieceId: "+pieceId);
 		if(this.isType(pieceId, "comp_pawn")){
 			for(var i=0; i<compPawnStartingPositions.length; i++){
 				if(this.isType(pieceId, String(i+1))){
@@ -220,9 +247,13 @@ class Pawn extends ChessPiece{
 					var nX = posNow[1];
 					var placeIdWithPosBefore = this.id_gen(y, x);
 					var placeIdWithPosNow = this.id_gen(nY, nX);
+					// console.log("Pos en passant: "+placeIdWithPosBefore+" "+placeIdWithPosNow);
 					if(placeIdWithPosBefore==placeIdWithPosNow){
 						newPlaceId = placeIdWithPosNow;
 						currentEnPassantPlaceId = placeIdWithPosNow;
+						this.placeIsSetEnPassant = true;
+						this.placeEnPassant = placeIdWithPosNow;
+						// console.log("curr en pass: "+currentEnPassantPlaceId);
 					}
 				}
 			}
@@ -230,31 +261,4 @@ class Pawn extends ChessPiece{
 		return newPlaceId;
 	}
 
-	removeEnPassantOpponent(currentEnPassantOpponentPlaceId, placeId){
-		var currentCoordinates = this.findPlaceCoordinates(placeId);
-		var enPassantOpponentPlaceId = this.id_gen(currentCoordinates[0] + 1, currentCoordinates[1]);
-		var enPassantOpponentPlace = document.getElementById(enPassantOpponentPlaceId);
-		if(enPassantOpponentPlace!=null){
-			var enPassantOpponent = enPassantOpponentPlace.firstElementChild;
-			if(enPassantOpponent!=null){
-				this.removeEnPassantOpponentHelper(currentEnPassantOpponentPlaceId, enPassantOpponent.id);
-			}
-		}
-		currentEnPassantPlaceId = "";
-	}
-
-	removeEnPassantOpponentHelper(currentEnPassantOpponentPlaceId, pieceId){
-		var current_element = document.getElementById(pieceId);
-		var parent_id = current_element.parentElement.id;
-		var parent_element = document.getElementById(parent_id);
-		if(current_element!=null){
-			if(parent_element!=null){
-				if(currentEnPassantOpponentPlaceId!=""||currentEnPassantOpponentPlaceId!=null){
-					if(parent_id==currentEnPassantOpponentPlaceId){
-						parent_element.removeChild(current_element);
-					}
-				}
-			}
-		}
-	}
 }

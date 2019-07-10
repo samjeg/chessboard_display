@@ -124,12 +124,45 @@ class ChessMechanics{
 							this.kingMovedRight = false;
 							this.kingMovedLeft = false;
 						}
+						// console.log("OUT Remove en passant: "+placeId+" "+this.currentEnPassantPlaceId);
 						if(this.currentEnPassantPlaceId!=""||this.currentEnPassantPlaceId!=null){
 							if(placeId==this.currentEnPassantPlaceId){
-								this.removeEnPassantOpponent(this.currentEnPassantOpponentPlaceId, placeId);	
+								// console.log("IN Remove en passant: "+placeId+" "+this.currentEnPassantPlaceId);
+								this.removeEnPassantOpponent(placeId);	
 							}
 						}
 						this.setPlayerPawnsHasMoved(selectedId);
+					}
+				}
+			}
+		}
+	}
+
+
+	removeEnPassantOpponent(placeId){
+		// console.log("En passant opponent: ");
+		var currentCoordinates = this.chessPiece.findPlaceCoordinates(placeId);
+		var enPassantOpponentPlaceId = this.chessPiece.id_gen(currentCoordinates[0] + 1, currentCoordinates[1]);
+		var enPassantOpponentPlace = document.getElementById(enPassantOpponentPlaceId);
+		if(enPassantOpponentPlace!=null){
+			var enPassantOpponent = enPassantOpponentPlace.firstElementChild;
+			if(enPassantOpponent!=null){
+				this.removeEnPassantOpponentHelper(enPassantOpponent.id);
+			}
+		}
+		this.currentEnPassantPlaceId = "";
+	}
+
+	removeEnPassantOpponentHelper(pieceId){
+		var current_element = document.getElementById(pieceId);
+		var parent_id = current_element.parentElement.id;
+		var parent_element = document.getElementById(parent_id);
+		console.log("Opponent Helper: "+parent_id+" "+pieceId+" "+this.currentEnPassantPlaceId);
+		if(current_element!=null){
+			if(parent_element!=null){
+				if(this.currentEnPassantOpponentPlaceId!=""||this.currentEnPassantOpponentPlaceId!=null){
+					if(parent_id==this.currentEnPassantOpponentPlaceId){
+						parent_element.removeChild(current_element);
 					}
 				}
 			}
@@ -225,6 +258,8 @@ class ChessMechanics{
 				x, 
 				y
 			);
+			this.currentEnPassantPlaceId = this.pawn.getEnPassantPlace();
+			this.currentEnPassantOpponentPlaceId = this.pawn.getEnPassantOpponentPlace();
 		}
 		else if(this.chessPiece.isType(pieceId, "rook")){
 			movablePlaces = this.rookExtraMoves(this.rook.movablePlaces(x, y));
@@ -269,6 +304,7 @@ class ChessMechanics{
 		}
 		return false;
 	}
+
 
 	switchColours(){
 		var player1Elements = document.getElementsByClassName("player");
