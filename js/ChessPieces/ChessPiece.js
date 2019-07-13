@@ -140,6 +140,23 @@ class ChessPiece {
 		return "";
 	}
 
+	findMultipleDifferentPieces(live_matrix, new_matrix){
+		var new_array = [];
+
+		for(var i=0; i<live_matrix.length; i++){
+			for(var j=0; j<live_matrix[i].length; j++){
+				if(live_matrix[i][j]!=new_matrix[i][j]){
+					if(live_matrix[i][j]!=null){
+						new_array.push(live_matrix[i][j]);
+					} else if(new_matrix[i][j]!=null){
+						new_array.push(new_matrix[i][j]);
+					}
+				}
+			}
+		}
+		return new_array;
+	}
+
 	findBoardCoordinates(new_matrix, value){
 		for(var i=0; i<new_matrix.length; i++){
 			for(var j=0; j<new_matrix[i].length; j++){

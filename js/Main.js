@@ -9,15 +9,24 @@ $(document).ready(function(){
 	];
 
 	var new_chessboard_matrix = [
-	["comp_rook1", "comp_horse1", "comp_bishop1", "comp_queen", "comp_king", "comp_bishop2", "comp_horse2", "comp_rook2"],
-	[ "comp_pawn1", "", "comp_pawn3", "comp_pawn4", "comp_pawn5", "comp_pawn6", "comp_pawn7", "comp_pawn8" ],
-	[ "", "", "", "", "", "", "", ""],
-	[ "", "comp_pawn2", "", "", "", "", "", ""],
-	[ "", "", "", "", "", "", "", ""],
-	[ "player_horse1", "", "", "", "", "", "", ""],
-	[ "player_pawn1", "player_pawn2", "player_pawn3", "player_pawn4", "player_pawn5", "player_pawn6", "player_pawn7", "player_pawn8" ],
-	["player_rook1", "", "player_bishop1", "player_queen", "player_king", "player_bishop2", "player_horse2", "player_rook2"]
+		["comp_rook1", "comp_horse1", "comp_bishop1", "comp_queen", "comp_king", "comp_bishop2", "comp_horse2", "comp_rook2"],
+		[ "comp_pawn1", "", "comp_pawn3", "comp_pawn4", "comp_pawn5", "comp_pawn6", "comp_pawn7", "comp_pawn8" ],
+		[ "", "", "", "", "", "", "", ""],
+		[ "", "comp_pawn2", "", "", "", "", "", ""],
+		[ "", "", "", "", "", "", "", ""],
+		[ "", "", "", "", "", "", "", ""],
+		[ "player_pawn1", "player_pawn2", "player_pawn3", "player_pawn4", "player_pawn5", "player_pawn6", "player_pawn7", "player_pawn8" ],
+		["player_rook1", "player_horse1", "player_bishop1", "player_queen", "player_king", "player_bishop2", "player_horse2", "player_rook2"]
 	];
+
+	/*	["comp_rook1", "comp_horse1", "", "comp_queen", "comp_king", "comp_bishop2", "", "comp_rook2"],
+		[ "comp_pawn1", "", "comp_pawn3", "comp_pawn4", "comp_pawn5", "comp_pawn6", "comp_pawn7", "comp_pawn8" ],
+		[ "comp_bishop1", "", "", "", "", "", "", ""],
+		[ "", "comp_pawn2", "", "comp_horse2", "", "", "", ""],
+		[ "", "", "player_pawn3", "", "", "", "", ""],
+		[ "", "", "", "", "", "", "", ""],
+		[ "player_pawn1", "player_pawn2", "", "player_pawn4", "player_pawn5", "player_pawn6", "player_pawn7", "player_pawn8" ],
+		["player_rook1", "player_horse1", "player_bishop1", "player_queen", "player_king", "player_bishop2", "player_horse2", "player_rook2"]*/
 
 	chessMech = new ChessMechanics();	
 
@@ -27,19 +36,38 @@ $(document).ready(function(){
 	var chess_place_ids = chessMech.chessPiece.get_chess_place_ids(chess_piece_ids);
 	chessMech.chessPiece.live_chessboard_matrix = chessMech.chessPiece.live_chessboard_matrix_gen(chess_place_ids, chess_piece_ids);
 	var matrixIsSame = chessMech.chessPiece.matrixSame(chessMech.chessPiece.live_chessboard_matrix, new_chessboard_matrix);
-	var diffPiece = chessMech.chessPiece.findDiffentPiece(chessMech.chessPiece.live_chessboard_matrix, new_chessboard_matrix);
-	var diffPieceCoor = chessMech.chessPiece.findBoardCoordinates(new_chessboard_matrix, diffPiece);
-	var diffPiecePlaceId = chessMech.chessPiece.id_gen(diffPieceCoor[0], diffPieceCoor[1]); 
 	
-	var diffElement = document.getElementById(diffPiece);
-	var diffPlaceElement = document.getElementById(diffPiecePlaceId).appendChild(diffElement);
+
+	// changePieceLocation(chessMech.chessPiece.live_chessboard_matrix, new_chessboard_matrix);
+ 	
+
+ 	// changeMultiplePieceLocations(chessMech.chessPiece.live_chessboard_matrix, new_chessboard_matrix);
+	
 	
 	var players = document.getElementsByClassName("player");
 	var comp_players = document.getElementsByClassName("comp-player");
 });
 
-function displayAttackingPlaces(){
-	console.log("Attacking Places: "+getAttackingPlaces());
+function changeMultiplePieceLocations(live_matrix, new_chessboard_matrix){
+	var diffPieces = chessMech.chessPiece.shrinkContinuosArray(
+ 		chessMech.chessPiece.findMultipleDifferentPieces(live_matrix, new_chessboard_matrix)
+ 	);
+
+	for(var i=0; i<diffPieces.length; i++){
+ 		var diffPiece = diffPieces[i];
+ 		var diffPieceCoor = chessMech.chessPiece.findBoardCoordinates(new_chessboard_matrix, diffPiece);
+		var diffPiecePlaceId = chessMech.chessPiece.id_gen(diffPieceCoor[0], diffPieceCoor[1]);
+		var diffElement = document.getElementById(diffPiece);
+		var diffPlaceElement = document.getElementById(diffPiecePlaceId).appendChild(diffElement);
+ 	}
+}
+
+function changePieceLocation(live_matrix, new_chessboard_matrix){
+	var diffPiece = chessMech.chessPiece.findDiffentPiece(live_matrix, new_chessboard_matrix);
+	var diffPieceCoor = chessMech.chessPiece.findBoardCoordinates(new_chessboard_matrix, diffPiece);
+	var diffPiecePlaceId = chessMech.chessPiece.id_gen(diffPieceCoor[0], diffPieceCoor[1]);
+	var diffElement = document.getElementById(diffPiece);
+	var diffPlaceElement = document.getElementById(diffPiecePlaceId).appendChild(diffElement);
 }
 
 class ChessMechanics{
