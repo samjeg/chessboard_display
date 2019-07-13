@@ -1,14 +1,14 @@
 $(document).ready(function(){
 
-	// runChessPieceTests();
-	// runHorseTests();
-	// runBishopTests();
-	// runPawnTests();
-	// runRookTests();
-	// runQueenTests();
-	// runKingTests();
-	// runCheckerGetterTests();
-	// runCastlingTests();
+	runChessPieceTests();
+	runHorseTests();
+	runBishopTests();
+	runPawnTests();
+	runRookTests();
+	runQueenTests();
+	runKingTests();
+	runCheckerGetterTests();
+	runCastlingTests();
 	runChessMechanicsTests();
 
 });
@@ -17,6 +17,8 @@ function runChessMechanicsTests(){
 	var testcase = new TestChessMechanics();
 
 	testcase.testCarefullKing();
+	testcase.testEnPassant();
+	testcase.testSwitchColours();
 }
 
 class TestChessMechanics{
@@ -24,6 +26,8 @@ class TestChessMechanics{
 	constructor(){
 		this.checkerGetter = new CheckerGetter();
 		this.king = new King();
+		this.pawn = new Pawn();
+		this.chessMech = new ChessMechanics();
 	}
 
 	testCarefullKing(){
@@ -52,6 +56,7 @@ class TestChessMechanics{
 		changeMultiplePieceLocations(original_chessboard_matrix, first_chessboard_matrix);
 
 		var moves = this.checkerGetter.carefullKing(this.king.getKingMovablePlaces(4, 7));
+		changeMultiplePieceLocations(first_chessboard_matrix, original_chessboard_matrix);
 		// console.log("Moves: "+moves);
 		var expectedResult = ["1D", "2F", "2D"];
 
@@ -60,6 +65,89 @@ class TestChessMechanics{
 				console.assert(moves[i]==expectedResult[i], "Carefull king not working");
 			}
 		}
+	}
+
+	testEnPassant(){
+		var original_chessboard_matrix = [
+			["comp_rook1", "comp_horse1", "comp_bishop1", "comp_queen", "comp_king", "comp_bishop2", "comp_horse2", "comp_rook2"],
+			[ "comp_pawn1", "comp_pawn2", "comp_pawn3", "comp_pawn4", "comp_pawn5", "comp_pawn6", "comp_pawn7", "comp_pawn8" ],
+			[ "", "", "", "", "", "", "", ""],
+			[ "", "", "", "", "", "", "", ""],
+			[ "", "", "", "", "", "", "", ""],
+			[ "", "", "", "", "", "", "", ""],
+			[ "player_pawn1", "player_pawn2", "player_pawn3", "player_pawn4", "player_pawn5", "player_pawn6", "player_pawn7", "player_pawn8" ],
+			["player_rook1", "player_horse1", "player_bishop1", "player_queen", "player_king", "player_bishop2", "player_horse2", "player_rook2"]
+		];
+
+		var first_chessboard_matrix = [
+			["comp_rook1", "comp_horse1", "comp_bishop1", "comp_queen", "comp_king", "comp_bishop2", "comp_horse2", "comp_rook2"],
+			[ "comp_pawn1", "", "comp_pawn3", "comp_pawn4", "comp_pawn5", "comp_pawn6", "comp_pawn7", "comp_pawn8" ],
+			[ "", "", "", "", "", "", "", ""],
+			[ "", "comp_pawn2", "player_pawn2", "", "", "", "", ""],
+			[ "", "", "", "", "", "", "", ""],
+			[ "", "", "", "", "", "", "", ""],
+			[ "player_pawn1", "", "player_pawn3", "player_pawn4", "player_pawn5", "player_pawn6", "player_pawn7", "player_pawn8" ],
+			["player_rook1", "player_horse1", "player_bishop1", "player_queen", "player_king", "player_bishop2", "player_horse2", "player_rook2"]
+		];
+
+		var second_chessboard_matrix = [
+			["comp_rook1", "comp_horse1", "comp_bishop1", "comp_queen", "comp_king", "comp_bishop2", "comp_horse2", "comp_rook2"],
+			[ "comp_pawn1", "", "comp_pawn3", "comp_pawn4", "comp_pawn5", "comp_pawn6", "comp_pawn7", "comp_pawn8" ],
+			[ "", "player_pawn", "", "", "", "", "", ""],
+			[ "", "comp_pawn2", "", "", "", "", "", ""],
+			[ "", "", "", "", "", "", "", ""],
+			[ "", "", "", "", "", "", "", ""],
+			[ "player_pawn1", "", "player_pawn3", "player_pawn4", "player_pawn5", "player_pawn6", "player_pawn7", "player_pawn8" ],
+			["player_rook1", "player_horse1", "player_bishop1", "player_queen", "player_king", "player_bishop2", "player_horse2", "player_rook2"]
+		];
+		
+		this.chessMech.playerPawnStartingPositions = ["2A", "2B", "2C", "2D", "2E", "2F", "2G", "2H"];
+		this.chessMech.compPawnStartingPositions = ["7A", "7B", "7C", "7D", "7E", "7F", "7G", "7H"];
+	
+		
+		chessMech.chessPiece.live_chessboard_matrix = first_chessboard_matrix;
+		changeMultiplePieceLocations(original_chessboard_matrix, first_chessboard_matrix);
+		var enPassantOpponent = document.getElementById("5B");
+		if(enPassantOpponent!=null){
+			if(enPassantOpponent.firstElementChild!=null){
+				// console.log(enPassantOpponent.firstElementChild.id+" -> test comp_pawn2");
+				console.assert(enPassantOpponent.firstElementChild.id=="comp_pawn2", "Pawn not places to start test");
+			}
+		}
+
+		this.chessMech.select("player_pawn2");
+		this.chessMech.moveTo("6B");
+
+		var enPassantOpponentAfter = document.getElementById("5B");
+		if(enPassantOpponentAfter!=null){
+			console.assert(!enPassantOpponentAfter.firstElementChild, "En Passant test failed");
+		}
+		// changeMultiplePieceLocations(second_chessboard_matrix, original_chessboard_matrix);
+
+	}
+
+	changeMultiplePieceLocations(live_matrix, new_chessboard_matrix){
+		var diffPieces = chessMech.chessPiece.shrinkContinuosArray(
+ 			chessMech.chessPiece.findMultipleDifferentPieces(live_matrix, new_chessboard_matrix)
+ 		);
+
+		for(var i=0; i<diffPieces.length; i++){
+ 			var diffPiece = diffPieces[i];
+ 			var diffPieceCoor = chessMech.chessPiece.findBoardCoordinates(new_chessboard_matrix, diffPiece);
+			var diffPiecePlaceId = chessMech.chessPiece.id_gen(diffPieceCoor[0], diffPieceCoor[1]);
+			var diffElement = document.getElementById(diffPiece);
+			var diffPlaceElement = document.getElementById(diffPiecePlaceId).appendChild(diffElement);
+ 		}
+	}
+
+	testSwitchColours(){
+		var pieceElementBefore = document.getElementById("player_pawn1");
+		this.chessMech.switchColours();
+		console.assert(pieceElementBefore.style.backgroundColor=="rgb(64, 64, 64)", "Player pawn colour not set");
+		this.chessMech.switchColours();
+		console.assert(pieceElementBefore.style.backgroundColor=="rgb(192, 192, 192)", "Player pawn not changing colour");
+		// console.log("Pawn element after after: "+pieceElementBefore.style.backgroundColor);
+		// var pieceElementAfter= document.getElementById("player_pawn1");
 	}
 }
 
@@ -197,8 +285,6 @@ class TestCastling {
 
 	}
 
-
-
 	changeMultiplePieceLocations(live_matrix, new_chessboard_matrix){
 		var diffPieces = chessMech.chessPiece.shrinkContinuosArray(
  			chessMech.chessPiece.findMultipleDifferentPieces(live_matrix, new_chessboard_matrix)
@@ -311,9 +397,10 @@ class TestPawn{
 	testGetMovablePlaces(){
 		// var expectedResult = ["7G", "3G", "6F", "4F"];
 		var movable = this.pawn.getPawnMovablePlaces(5, 6);
-		var movableWithPawn = this.pawn.getPawnMovablePlaces(2, 4);
+		var movableWithPawn = this.pawn.getPawnMovablePlaces(3, 2);
 		var expectedMovable = [,, "3F", "4F"];
-		var expectedMovableWithPawn = ["5B",, "5C", "6C"];
+		// var expectedMovableWithPawn = ["5B",, "5C", "6C"];
+		var expectedMovableWithPawn = ["7C", "7E"];
 		// console.log("Movable: "+movable+" - "+movableWithPawn);
 		
 		for(var i=0; i<movable.length; i++){
@@ -434,19 +521,19 @@ class TestKing{
 function runChessPieceTests(){
 	var testcase = new TestChessPiece();
 
-	// testcase.testMoveArrayToBack();
-	// testcase.testShrinkContinuosArray();
-	// testcase.testFindPlaceCoordinates();
-	// testcase.testIsType();
-	// testcase.test_first_coordinate_gen();
-	// testcase.test_second_coordinate_gen();
-	// testcase.test_id_gen();
-	// testcase.testMatrixSame();
-	// testcase.testFindDiffentPiece();
+	testcase.testMoveArrayToBack();
+	testcase.testShrinkContinuosArray();
+	testcase.testFindPlaceCoordinates();
+	testcase.testIsType();
+	testcase.test_first_coordinate_gen();
+	testcase.test_second_coordinate_gen();
+	testcase.test_id_gen();
+	testcase.testMatrixSame();
+	testcase.testFindDiffentPiece();
 	testcase.testFindMultipleDifferentPieces();
-	// testcase.testFindPlaceCoordinates();
-	// testcase.test_get_chess_place_ids();
-	// testcase.test_live_chessboard_matrix_gen();
+	testcase.testFindPlaceCoordinates();
+	testcase.test_get_chess_place_ids();
+	testcase.test_live_chessboard_matrix_gen();
 }
 
 class TestChessPiece{
@@ -640,16 +727,16 @@ class TestChessPiece{
 
 	test_get_chess_place_ids(){
 		var chess_piece_ids = [ 
-			"comp_pawn1", "comp_pawn2", "comp_pawn3", "comp_pawn4", "comp_pawn5", "comp_pawn6", "comp_pawn7", "comp_pawn8", 
+			"comp_pawn1", "comp_pawn3", "comp_pawn4", "comp_pawn5", "comp_pawn6", "comp_pawn7", "comp_pawn8", 
 			"comp_rook1", "comp_horse1", "comp_bishop1", "comp_queen", "comp_king", "comp_bishop2", "comp_horse2", "comp_rook2",
-			"player_pawn1", "player_pawn2", "player_pawn3", "player_pawn4", "player_pawn5", "player_pawn6", "player_pawn7", "player_pawn8",
+			"player_pawn1", "player_pawn3", "player_pawn4", "player_pawn5", "player_pawn6", "player_pawn7", "player_pawn8",
 			"player_rook1", "player_horse1", "player_bishop1", "player_queen", "player_king", "player_bishop2", "player_horse2", "player_rook2",
 		];
 
 		var expectedResult = [
-			"7A", "5B", "7C", "7D", "7E", "7F", "7G", "7H",
+			"7A", "7C", "7D", "7E", "7F", "7G", "7H",
 			"8A", "8B", "8C", "8D", "8E", "8F", "8G", "8H",
-			"2A", "2B", "2C", "2D", "2E", "2F", "2G", "2H",
+			"2A", "2C", "2D", "2E", "2F", "2G", "2H",
 			"1A", "1B", "1C", "1D", "1E", "1F", "1G", "1H"	
 		];
 

@@ -197,7 +197,7 @@ class Pawn extends ChessPiece{
 					leftOfPawnElement.firstElementChild.id, 
 					leftOfPawn
 				);
-				console.log("Curr en pass move: "+currentEnPassantPlaceId);
+				// console.log("Curr en pass move: "+currentEnPassantPlaceId);
 				// console.log("Pawn ready: "+enPassantSpace);
 				if(enPassantSpace!=""){
 					rookArray.push(enPassantSpace);
